@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.MenuLogic;
+package com.Reptir.TelegramJavaBot.Framework.Core.MenuLogic;
 
 import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

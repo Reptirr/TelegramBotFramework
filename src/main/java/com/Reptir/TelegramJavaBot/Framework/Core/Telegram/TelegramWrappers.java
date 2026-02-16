@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.utils;
+package com.Reptir.TelegramJavaBot.Framework.Core.Telegram;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;

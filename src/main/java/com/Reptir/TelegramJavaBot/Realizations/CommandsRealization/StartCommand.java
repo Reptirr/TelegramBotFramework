@@ -1,18 +1,16 @@
-package com.Reptir.TelegramJavaBot.CommandsRealization;
+package com.Reptir.TelegramJavaBot.Realizations.CommandsRealization;
 
-import com.Reptir.TelegramJavaBot.CommandLogic.Command;
-import com.Reptir.TelegramJavaBot.CommandLogic.InformationForCommand;
-import com.Reptir.TelegramJavaBot.MenuRealization.StartMenu;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Realizations.MenuRealization.JustMenu;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
-import java.util.List;
 
 
-public class StartCommand implements Command {
+public class StartCommand implements BaseCommand {
     @Override
     public String getName() {
         return "/start";
@@ -25,13 +23,15 @@ public class StartCommand implements Command {
 
     @SneakyThrows
     @Override
-    public void execute(InformationForCommand info, String[] args) {
-        TelegramClient tgClient = info.getTgClient();
-        InlineKeyboardMarkup markup = new StartMenu().create();
+    public void execute(Context ctx, String[] args) {
+        TelegramClient tgClient = ctx.getTgClient();
+        InlineKeyboardMarkup markup = new JustMenu().create();
+
+
 
         SendMessage sendMessage = SendMessage.builder()
-                .chatId(info.getMessage().getChatId())
-                .text("Мама есть? Отвечай блять")
+                .chatId(ctx.getMessage().getChatId())
+                .text("What`s up? brooooooooooo")
                 .replyMarkup(markup)
                 .build();
 
