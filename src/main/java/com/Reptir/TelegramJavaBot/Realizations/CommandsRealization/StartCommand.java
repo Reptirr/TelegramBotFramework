@@ -1,46 +1,35 @@
 package com.Reptir.TelegramJavaBot.Realizations.CommandsRealization;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand; // Standard class of command
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
-import com.Reptir.TelegramJavaBot.Realizations.MenuRealization.JustMenu;
-import lombok.SneakyThrows;
+import com.Reptir.TelegramJavaBot.Realizations.MenuRealization.StartMenu;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.generics.TelegramClient;
 
-
+// Just a command
 public class StartCommand implements BaseCommand {
     @Override
-    public String getName() {
+    public String getName() { // name which comand will execute
         return "/start";
     }
 
     @Override
-    public boolean isForUserInput() {
+    public boolean isForUserInput() { // can command execute by user input
         return true;
     }
 
-    @SneakyThrows
     @Override
-    public void execute(Context ctx, String[] args) {
-        TelegramClient tgClient = ctx.getTgClient();
-        InlineKeyboardMarkup markup = new JustMenu().create();
-
-
-
+    public void execute(Context ctx, String[] args) { // what will happen when command execute
         SendMessage sendMessage = SendMessage.builder()
+                .text("Hi! it`s a start command, " + ctx.getMessage().getFrom().getFirstName() + ". ")
                 .chatId(ctx.getMessage().getChatId())
-                .text("What`s up? brooooooooooo")
-                .replyMarkup(markup)
+                .replyMarkup(new StartMenu().create()) // it`s an inline keyboard
                 .build();
 
         try {
-            tgClient.execute(sendMessage);
+            ctx.getTgClient().execute(sendMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
-            // logging in future
+            System.out.println("Some problems in command \"StartCommand\": " + e);
         }
     }
-
 }
