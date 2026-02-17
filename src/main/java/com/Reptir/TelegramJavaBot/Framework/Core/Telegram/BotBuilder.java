@@ -2,7 +2,7 @@ package com.Reptir.TelegramJavaBot.Framework.Core.Telegram;
 
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
-import com.Reptir.TelegramJavaBot.Framework.Core.RegistryLogic.Registry;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.Empties.EmptyCommand;
 
 import java.util.ArrayList;
@@ -27,13 +27,13 @@ public class BotBuilder {
     public Bot build() {
         this.command(new EmptyCommand()); // скрытый класс
 
-        Registry registry = new Registry();
+        RegistryCommand registryCommand = new RegistryCommand();
 
         for (BaseCommand command : commands) {
-            registry.register(command.getName(), command);
+            registryCommand.register(command.getName(), command);
         }
 
-        return new Bot(token, registry);
+        return new Bot(token, registryCommand);
     }
 
 

@@ -2,7 +2,8 @@ package com.Reptir.TelegramJavaBot.Framework.Core.Handlers;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.TelegramCommandExecutor;
-import com.Reptir.TelegramJavaBot.Framework.Core.RegistryLogic.Registry;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryCommand;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryThread;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,14 +15,16 @@ import java.util.Arrays;
 
 @Component
 public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
-    Registry commandRegistry;
+    RegistryCommand commandRegistry;
+    RegistryThread threadRegistry;
     TelegramClient tgClient;
     TelegramCommandExecutor commandExecutor;
 
-    public UpdateHandler(Registry commandRegistry, TelegramClient tgClient, TelegramCommandExecutor executor) {
+    public UpdateHandler(RegistryCommand commandRegistry, TelegramClient tgClient, TelegramCommandExecutor executor, RegistryThread registryThread) {
         this.commandRegistry = commandRegistry;
         this.tgClient = tgClient;
         this.commandExecutor = executor;
+        this.threadRegistry = registryThread;
     }
 
     @SneakyThrows
@@ -37,7 +40,7 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
 
             Context ctx = new Context(message, tgClient, null);
 
-            commandExecutor.ExecByInput(input, ctx, args);
+            threadRegistry.createThread("", () -> commandExecutor.ExecByInput(input, ctx, args));
         } else if (update.hasCallbackQuery()) {
             if (update.getCallbackQuery().getMessage() instanceof Message message) {
                 String callbackData = update.getCallbackQuery().getData();
@@ -48,7 +51,7 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
                 String[] args = Arrays.copyOfRange(parts, 1, parts.length);
 
                 System.out.println("handle: " + commandName);
-                commandExecutor.ExecByInternal(commandName, ctx, args);
+                threadRegistry.createThread(threadRegistry.getNewId(), () -> commandExecutor.ExecByInternal(commandName, ctx, args));
             } else {
                 // logging in future
             }

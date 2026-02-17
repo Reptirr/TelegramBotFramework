@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Framework.Core.RegistryLogic;
+package com.Reptir.TelegramJavaBot.Framework.Core.Registries;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Registry {
+public class RegistryCommand {
     private final Map<String, BaseCommand> commands = new HashMap<>();
 
     public void register(String name, BaseCommand command) {

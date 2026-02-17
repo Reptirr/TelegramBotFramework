@@ -3,21 +3,30 @@ package com.Reptir.TelegramJavaBot.Framework.Core.Telegram;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.TelegramCommandExecutor;
 import com.Reptir.TelegramJavaBot.Framework.Core.Handlers.UpdateHandler;
-import com.Reptir.TelegramJavaBot.Framework.Core.RegistryLogic.Registry;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryCommand;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryThread;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+import java.util.Map;
+import java.util.concurrent.Future;
+
 public class Bot {
     private final String token;
-    private final Registry registry;
     private boolean isStarted = false;
+
+    private final RegistryCommand registryCommand;
+    private final RegistryThread registryThread;
+    private TelegramCommandExecutor executor;
+    private TelegramClient tgClient;
     private TelegramBotsLongPollingApplication app;
 
-    public Bot(String token, Registry registry) {
+    public Bot(String token, RegistryCommand registryCommand) {
         this.token = token;
-        this.registry = registry;
+        this.registryCommand = registryCommand;
+        registryThread = new RegistryThread();
     }
 
     public void start() {
@@ -25,11 +34,11 @@ public class Bot {
             isStarted = true;
 
             app = new TelegramBotsLongPollingApplication();
-            TelegramClient tgClient = new OkHttpTelegramClient(token);
-            TelegramCommandExecutor executor = new TelegramCommandExecutor(registry);
+            tgClient = new OkHttpTelegramClient(token);
+            executor = new TelegramCommandExecutor(registryCommand);
 
             try {
-                app.registerBot(token, new UpdateHandler(registry, tgClient, executor));
+                app.registerBot(token, new UpdateHandler(registryCommand, tgClient, executor, registryThread));
             } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
                 // logging in future
@@ -51,11 +60,15 @@ public class Bot {
         }
     }
 
+    public Map<String, Future<?>> getThreads() {
+        return registryThread.getThreads();
+    }
+
     public void addCommand(BaseCommand command) {
-        registry.register(command.getName(), command);
+        registryCommand.register(command.getName(), command);
     }
 
     public void removeCommand(BaseCommand command) {
-        registry.remove(command.getName());
+        registryCommand.remove(command.getName());
     }
 }

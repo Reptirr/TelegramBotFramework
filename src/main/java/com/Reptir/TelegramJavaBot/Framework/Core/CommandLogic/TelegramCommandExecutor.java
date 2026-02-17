@@ -4,17 +4,17 @@ package com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic;
 * Имеет лист из команд, имеет функ ExecCommand которая запускает команду из аргумента
 */
 
-import com.Reptir.TelegramJavaBot.Framework.Core.RegistryLogic.Registry;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryCommand;
 
 public class TelegramCommandExecutor {
-    private final Registry registry;
+    private final RegistryCommand registryCommand;
 
-    public TelegramCommandExecutor(Registry registry) {
-        this.registry = registry;
+    public TelegramCommandExecutor(RegistryCommand registryCommand) {
+        this.registryCommand = registryCommand;
     }
 
     private void ExecCommand(String commandName, Context ctx, String[] args) {
-        BaseCommand command = registry.get(commandName);
+        BaseCommand command = registryCommand.get(commandName);
         if (command != null) {
             command.execute(ctx, args);
             if (ctx.getCallback() != null) {
@@ -29,7 +29,7 @@ public class TelegramCommandExecutor {
     }
 
     public void ExecByInput(String commandName, Context ctx, String[] args)  {
-        BaseCommand command = registry.get(commandName);
+        BaseCommand command = registryCommand.get(commandName);
         if (command != null && command.isForUserInput()) {
             ExecCommand(commandName, ctx, args);
         }
