@@ -1,6 +1,7 @@
-package com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic;
+package com.Reptir.TelegramJavaBot.Framework.Core.Telegram;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.TelegramWrappers;
+import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -12,11 +13,15 @@ public class Context {
     private final Message message;
     private final TelegramClient tgClient;
     private final CallbackQuery callback;
+    private final DialogManager dialogManager;
+    private final RegistryUser registryUser;
 
-    public Context(Message message, TelegramClient tgClient, CallbackQuery callback) {
+    public Context(Message message, TelegramClient tgClient, CallbackQuery callback, DialogManager dialogManager, RegistryUser registryUser) {
         this.message = message;
         this.tgClient = tgClient;
         this.callback = callback;
+        this.dialogManager = dialogManager;
+        this.registryUser = registryUser;
     }
 
     public Message getMessage() {
@@ -27,6 +32,12 @@ public class Context {
     }
     public CallbackQuery getCallback() {
         return callback;
+    }
+    public DialogManager getDialogManager() {
+        return dialogManager;
+    }
+    public RegistryUser getRegistryUser() {
+        return registryUser;
     }
 
     public void edit(String text, InlineKeyboardMarkup markup) {

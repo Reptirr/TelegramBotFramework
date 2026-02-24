@@ -1,5 +1,6 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic;
 
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Context;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 

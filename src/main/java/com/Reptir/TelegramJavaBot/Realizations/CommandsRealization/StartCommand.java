@@ -1,7 +1,7 @@
 package com.Reptir.TelegramJavaBot.Realizations.CommandsRealization;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand; // Standard class of command
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Context;
 import com.Reptir.TelegramJavaBot.Realizations.MenuRealization.StartMenu;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
