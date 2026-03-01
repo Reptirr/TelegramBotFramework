@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Realizations.CommandsRealization;
+package example.Realizations.CommandsRealization;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Context;

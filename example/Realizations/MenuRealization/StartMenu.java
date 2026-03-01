@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Realizations.MenuRealization;
+package example.Realizations.MenuRealization;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.MenuLogic.BaseMenu;
 import com.Reptir.TelegramJavaBot.Framework.Core.MenuLogic.InlineKeyboardBuilder;

@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.Reptirr</groupId>
-	<artifactId>TelegramJavaBot</artifactId>
-	<version>1.0.0</version>
+	<groupId>com.Reptir</groupId>
+	<artifactId>TelegramJavaBotFramework</artifactId>
+	<version>1.0.1</version>
 	<name>TelegramJavaBotFramework</name>
 	<description>Telegram bot - wrapper with base logic</description>
 

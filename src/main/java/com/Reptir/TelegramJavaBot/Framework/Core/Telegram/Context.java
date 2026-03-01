@@ -41,6 +41,7 @@ public class Context {
     }
 
     public void edit(String text, InlineKeyboardMarkup markup) {
+        if (message.getFrom() != null && message.getFrom().getIsBot()) throw new RuntimeException("Cant use ctx.edit() in non-bot messages");
         EditMessageText editMessageText;
         if (markup != null) {
             editMessageText = TelegramWrappers.editMessage(message.getChatId(), message.getMessageId(), text, markup);

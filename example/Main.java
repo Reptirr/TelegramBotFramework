@@ -1,10 +1,10 @@
-package com.Reptir.TelegramJavaBot;
+package example;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Bot;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotBuilder;
-import com.Reptir.TelegramJavaBot.Realizations.CommandsRealization.ActionCommand;
-import com.Reptir.TelegramJavaBot.Realizations.CommandsRealization.DialogCommand;
-import com.Reptir.TelegramJavaBot.Realizations.CommandsRealization.StartCommand;
+import example.Realizations.CommandsRealization.ActionCommand;
+import example.Realizations.CommandsRealization.DialogCommand;
+import example.Realizations.CommandsRealization.StartCommand;
 
 
 /*
@@ -15,7 +15,7 @@ import com.Reptir.TelegramJavaBot.Realizations.CommandsRealization.StartCommand;
 
 public class Main {
     public static void main(String[] args) {
-        Bot bot = BotBuilder.builder("TOKEN") // your token bot. you can get it in @BotFather in telegram.
+        Bot bot = BotBuilder.builder("your token") // your token bot. you can get it in @BotFather in telegram.
                 .command(new ActionCommand()) // you must register your command there
                 .command(new StartCommand())
                 .command(new DialogCommand())

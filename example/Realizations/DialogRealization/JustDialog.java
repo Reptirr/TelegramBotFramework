@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Realizations.DialogRealization;
+package example.Realizations.DialogRealization;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.BaseDialog;

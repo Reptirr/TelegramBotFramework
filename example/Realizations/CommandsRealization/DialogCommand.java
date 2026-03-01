@@ -1,9 +1,9 @@
-package com.Reptir.TelegramJavaBot.Realizations.CommandsRealization;
+package example.Realizations.CommandsRealization;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.TelegramWrappers;
-import com.Reptir.TelegramJavaBot.Realizations.DialogRealization.JustDialog;
+import example.Realizations.DialogRealization.JustDialog;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class DialogCommand implements BaseCommand {
