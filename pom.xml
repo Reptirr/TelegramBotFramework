@@ -2,17 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.example</groupId>
+
+	<groupId>com.Reptirr</groupId>
 	<artifactId>TelegramJavaBot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>TelegramJavaBot</name>
-	<description>First telegram bot on java spring</description>
+	<version>1.0.0</version>
+	<name>TelegramJavaBotFramework</name>
+	<description>Telegram bot - wrapper with base logic</description>
+
 	<url/>
 	<licenses>
 		<license/>
@@ -32,29 +28,18 @@
 
 
 	<dependencies>
+		<!-- основной модуль для long polling, содержащий LongPollingSingleThreadUpdateConsumer -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots-longpolling</artifactId>
+			<version>9.4.0</version>
 		</dependency>
 
+		<!-- клиент для выполнения запросов (SendMessage и прочие методы API) -->
 		<dependency>
 			<groupId>org.telegram</groupId>
 			<artifactId>telegrambots-client</artifactId>
-			<version>8.3.0</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.telegram</groupId>
-			<artifactId>telegrambots-springboot-longpolling-starter</artifactId>
-			<version>8.3.0</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<version>9.4.0</version>
 		</dependency>
 
 		<dependency>
@@ -64,15 +49,16 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
-
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>23</source>
+					<target>23</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

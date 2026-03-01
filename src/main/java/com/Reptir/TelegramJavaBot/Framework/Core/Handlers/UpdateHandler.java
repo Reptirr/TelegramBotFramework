@@ -4,7 +4,6 @@ import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.TelegramCommandExecutor;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.*;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -13,7 +12,6 @@ import lombok.SneakyThrows;
 
 import java.util.Arrays;
 
-@Component
 public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     RegistryCommand commandRegistry;
     RegistryThread threadRegistry;
