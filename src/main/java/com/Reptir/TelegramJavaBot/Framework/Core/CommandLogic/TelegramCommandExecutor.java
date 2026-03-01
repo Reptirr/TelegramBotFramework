@@ -1,9 +1,5 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic;
 
-/*
-* Имеет лист из команд, имеет функ ExecCommand которая запускает команду из аргумента
-*/
-
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Context;
 

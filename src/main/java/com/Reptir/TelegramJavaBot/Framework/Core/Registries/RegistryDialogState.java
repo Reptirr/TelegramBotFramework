@@ -25,8 +25,12 @@ public class RegistryDialogState {
         userStates.remove(userId);
     }
 
-    public void createDialog(Long userId, BaseDialog dialog) {   // вызывается из BaseCommand
-        userStates.put(userId, new UserDialogState(dialog, userId));
+    public void createDialog(Long userId, BaseDialog dialog, Long time) {   // вызывается из BaseCommand
+        userStates.put(userId, new UserDialogState(dialog, userId, time));
+    }
+
+    public Map<Long, UserDialogState> getMap() {
+        return userStates;
     }
 
 }

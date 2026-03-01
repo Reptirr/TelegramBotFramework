@@ -1,6 +1,5 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.Registries;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,6 +64,12 @@ public class RegistryThread {
             future.cancel(true);
         }
         releaseId(Integer.parseInt(id));
+    }
+
+    public void shutdown() {
+        if (!executorService.isShutdown()) {
+            executorService.shutdownNow();
+        }
     }
 
     public Map<String, Future<?>> getThreads() {

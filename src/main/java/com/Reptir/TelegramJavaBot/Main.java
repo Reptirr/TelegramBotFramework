@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        Bot bot = BotBuilder.builder("8537210836:AAFIG9jOQ4sVfuJChizISnbxBPgodfzjPn0") // your token bot. you can get it in @BotFather in telegram.
+        Bot bot = BotBuilder.builder("TOKEN") // your token bot. you can get it in @BotFather in telegram.
                 .command(new ActionCommand()) // you must register your command there
                 .command(new StartCommand())
                 .command(new DialogCommand())

@@ -25,14 +25,14 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     DialogManager dialogManager;
 
 
-    public UpdateHandler(RegistryCommand commandRegistry, TelegramClient tgClient, TelegramCommandExecutor executor, RegistryThread registryThread, RegistryUser registryUser) {
+    public UpdateHandler(RegistryCommand commandRegistry, TelegramClient tgClient, TelegramCommandExecutor executor, RegistryThread registryThread, RegistryUser registryUser, RegistryDialogState registryDialogState) {
         this.commandRegistry = commandRegistry;
         this.tgClient = tgClient;
         this.commandExecutor = executor;
         this.threadRegistry = registryThread;
         this.registryUser = registryUser;
 
-        this.registryDialogState = new RegistryDialogState();
+        this.registryDialogState = registryDialogState;
         this.dialogManager = new DialogManager(registryDialogState);
     }
 
@@ -49,7 +49,7 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
 
             Message message = update.getMessage();
 
-            Context ctx = new Context(message, tgClient, null, dialogManager);
+            Context ctx = new Context(message, tgClient, null, dialogManager, registryUser);
             String[] parts = message.getText().split(" ");
             String input = parts[0];
             String[] args = Arrays.copyOfRange(parts, 1, parts.length);
@@ -64,14 +64,11 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
                 String callbackData = update.getCallbackQuery().getData();
                 String[] parts = callbackData.split(":");
 
-                Context ctx = new Context(message, tgClient, update.getCallbackQuery(), dialogManager);
+                Context ctx = new Context(message, tgClient, update.getCallbackQuery(), dialogManager, registryUser);
                 String commandName = parts[0];
                 String[] args = Arrays.copyOfRange(parts, 1, parts.length);
 
-                System.out.println("handle: " + commandName);
                 threadRegistry.createThread(() -> commandExecutor.ExecByInternal(commandName, ctx, args));
-            } else {
-                // logging in future
             }
         }
     }

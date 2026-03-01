@@ -1,8 +1,5 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.Registries;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.UserDialogState;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
