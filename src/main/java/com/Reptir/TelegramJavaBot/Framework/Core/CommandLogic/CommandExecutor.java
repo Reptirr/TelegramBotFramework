@@ -14,45 +14,45 @@ public class CommandExecutor {
 
     private void ExecCommand(String commandName, Context ctx, String[] args) {
         if (ctx == null) {
-            logger.warn("Detected null ctx");
+            logger.warn("Detected null ctx, skipping");
+            return;
         }
 
-        BaseCommand command = registryCommand.get(commandName);
-        if (command != null) {
-            logger.debug("Execute command: {}", commandName);
+        CommandEntry entry = registryCommand.get(commandName);
 
-            command.execute(ctx, args);
-
-            if (ctx == null) return;
-            if (ctx.getCallback() != null) {
-                logger.debug("Execute alert command: {}", commandName);
-                command.executeAlert(ctx);
-            }
+        if (entry == null) {
+            logger.info("Can`t find command '{}', skipping", commandName);
+            return;
         }
 
-        BaseCommand defaultCommand = registryCommand.getDefaultCommand();
-        if (defaultCommand != null) {
-            logger.info("Executing default command: command '{}' not found", commandName);
-            defaultCommand.execute(ctx, args);
-
-            if (ctx == null) return;
-            if (ctx.getCallback() != null) {
-                logger.debug("Execute alert default command");
-                defaultCommand.executeAlert(ctx);
-            }
+        // определение какого типа апдейт
+        CommandTrigger messageTrigger;
+        if (ctx.getUpdate().hasMessage()) {
+            messageTrigger = CommandTrigger.USER_INPUT;
+        } else if (ctx.getUpdate().hasCallbackQuery()) {
+            messageTrigger = CommandTrigger.CALLBACK;
+        } else if (ctx.getUpdate().hasEditedMessage()) {
+            messageTrigger = CommandTrigger.MESSAGE_EDITED;
         } else {
-            logger.info("Cannot find command: '{}'", commandName);
+            messageTrigger = CommandTrigger.UNKNOWN;
+        }
+
+        if (entry.triggers().contains(messageTrigger)) {
+            entry.command().execute(ctx, args);
         }
     }
 
     public void ExecByInternal(String commandName, Context ctx, String[] args)  {
-        ExecCommand(commandName, ctx, args);
+        CommandEntry entry = registryCommand.get(commandName);
+
+        if (entry.triggers().contains(CommandTrigger.CALLBACK))
+            ExecCommand(commandName, ctx, args);
     }
 
     public void ExecByInput(String commandName, Context ctx, String[] args)  {
-        BaseCommand command = registryCommand.get(commandName);
-        if (command.isForUserInput()) {
+        CommandEntry entry = registryCommand.get(commandName);
+
+        if (entry.triggers().contains(CommandTrigger.USER_INPUT))
             ExecCommand(commandName, ctx, args);
-        }
     }
 }

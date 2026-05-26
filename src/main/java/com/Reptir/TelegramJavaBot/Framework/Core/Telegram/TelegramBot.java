@@ -1,7 +1,9 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.Telegram;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandEntry;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandExecutor;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandTrigger;
 import com.Reptir.TelegramJavaBot.Framework.Core.Handlers.UpdateHandler;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.*;
 import com.Reptir.TelegramJavaBot.Framework.Core.ThreadLogic.ThreadId;
@@ -14,6 +16,7 @@ import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -77,8 +80,8 @@ public class TelegramBot {
         return registryUser.getUsers();
     }
 
-    public void addCommand(String name, BaseCommand command) {
-        registryCommand.register(name, command);
+    public void addCommand(String name, BaseCommand command, EnumSet<CommandTrigger> triggers) {
+        registryCommand.register(name, new CommandEntry(command, triggers));
     }
 
     public void removeCommand(String name) {
