@@ -74,11 +74,9 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
 //        }
         String[] parts = update.getMessage().getText().split(" ");
         String commandName = parts[0];
-        String[] args = parts.length == 1 ? new String[0]
-                                          : Arrays.copyOfRange(parts, 1, parts.length);
-        
+
         Context ctx = new Context(new Messenger(tgClient), update, dialogManager, registryUser);
 
-        commandExecutor.execCommand(commandName, ctx, args);
+        commandExecutor.execCommand(commandName, ctx);
     }
 }

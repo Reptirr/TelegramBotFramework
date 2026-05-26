@@ -12,7 +12,7 @@ public class CommandExecutor {
         this.registryCommand = registryCommand;
     }
 
-    public void execCommand(String commandName, Context ctx, String[] args) {
+    public void execCommand(String commandName, Context ctx) {
         if (ctx == null) {
             logger.warn("Detected null ctx, skipping");
             return;
@@ -26,7 +26,7 @@ public class CommandExecutor {
         }
 
         if (entry.triggers().contains(ctx.trigger())) {
-            entry.command().execute(ctx, args);
+            entry.command().execute(ctx);
         }
     }
 }
