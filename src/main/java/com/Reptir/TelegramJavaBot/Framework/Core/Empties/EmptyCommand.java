@@ -5,11 +5,6 @@ import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
 
 public class EmptyCommand implements BaseCommand {
     @Override
-    public boolean isForUserInput() {
-        return false;
-    }
-
-    @Override
     public void execute(Context ctx, String[] args) {
 
     }

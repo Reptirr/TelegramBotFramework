@@ -12,7 +12,7 @@ public class CommandExecutor {
         this.registryCommand = registryCommand;
     }
 
-    private void ExecCommand(String commandName, Context ctx, String[] args) {
+    public void execCommand(String commandName, Context ctx, String[] args) {
         if (ctx == null) {
             logger.warn("Detected null ctx, skipping");
             return;
@@ -25,34 +25,8 @@ public class CommandExecutor {
             return;
         }
 
-        // определение какого типа апдейт
-        CommandTrigger messageTrigger;
-        if (ctx.getUpdate().hasMessage()) {
-            messageTrigger = CommandTrigger.USER_INPUT;
-        } else if (ctx.getUpdate().hasCallbackQuery()) {
-            messageTrigger = CommandTrigger.CALLBACK;
-        } else if (ctx.getUpdate().hasEditedMessage()) {
-            messageTrigger = CommandTrigger.MESSAGE_EDITED;
-        } else {
-            messageTrigger = CommandTrigger.UNKNOWN;
-        }
-
-        if (entry.triggers().contains(messageTrigger)) {
+        if (entry.triggers().contains(ctx.trigger())) {
             entry.command().execute(ctx, args);
         }
-    }
-
-    public void ExecByInternal(String commandName, Context ctx, String[] args)  {
-        CommandEntry entry = registryCommand.get(commandName);
-
-        if (entry.triggers().contains(CommandTrigger.CALLBACK))
-            ExecCommand(commandName, ctx, args);
-    }
-
-    public void ExecByInput(String commandName, Context ctx, String[] args)  {
-        CommandEntry entry = registryCommand.get(commandName);
-
-        if (entry.triggers().contains(CommandTrigger.USER_INPUT))
-            ExecCommand(commandName, ctx, args);
     }
 }
