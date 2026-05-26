@@ -12,47 +12,21 @@ public class CommandExecutor {
         this.registryCommand = registryCommand;
     }
 
-    private void ExecCommand(String commandName, Context ctx, String[] args) {
+    public void execCommand(String commandName, Context ctx) {
         if (ctx == null) {
-            logger.warn("Detected null ctx");
+            logger.warn("Detected null ctx, skipping");
+            return;
         }
 
-        BaseCommand command = registryCommand.get(commandName);
-        if (command != null) {
-            logger.debug("Execute command: {}", commandName);
+        CommandEntry entry = registryCommand.get(commandName);
 
-            command.execute(ctx, args);
-
-            if (ctx == null) return;
-            if (ctx.getCallback() != null) {
-                logger.debug("Execute alert command: {}", commandName);
-                command.executeAlert(ctx);
-            }
+        if (entry == null) {
+            logger.info("Can`t find command '{}', skipping", commandName);
+            return;
         }
 
-        BaseCommand defaultCommand = registryCommand.getDefaultCommand();
-        if (defaultCommand != null) {
-            logger.info("Executing default command: command '{}' not found", commandName);
-            defaultCommand.execute(ctx, args);
-
-            if (ctx == null) return;
-            if (ctx.getCallback() != null) {
-                logger.debug("Execute alert default command");
-                defaultCommand.executeAlert(ctx);
-            }
-        } else {
-            logger.info("Cannot find command: '{}'", commandName);
-        }
-    }
-
-    public void ExecByInternal(String commandName, Context ctx, String[] args)  {
-        ExecCommand(commandName, ctx, args);
-    }
-
-    public void ExecByInput(String commandName, Context ctx, String[] args)  {
-        BaseCommand command = registryCommand.get(commandName);
-        if (command.isForUserInput()) {
-            ExecCommand(commandName, ctx, args);
+        if (entry.triggers().contains(ctx.trigger())) {
+            entry.command().execute(ctx);
         }
     }
 }
