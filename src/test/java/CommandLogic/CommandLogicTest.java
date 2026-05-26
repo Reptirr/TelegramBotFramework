@@ -1,134 +1,48 @@
 package CommandLogic;
 
-
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandExecutor;
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
-import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryCommand;
-import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandTrigger;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
 import org.junit.jupiter.api.Test;
-import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CommandLogicTest {
+
     @Test
-    void internalCommandShouldExecute() {
-        var registry = new RegistryCommand();
-        var executor = new CommandExecutor(registry);
+    void shouldReturnUserInputWhenMessageExists() {
+        Update update = new Update();
+        update.setMessage(new Message());   // сам объект Message может быть пустым, важно что не null
 
-        var executed = new AtomicBoolean(false);
-
-        registry.register("test", new BaseCommand() {
-            @Override
-            public boolean isForUserInput() {
-                return false;
-            }
-
-            @Override
-            public void execute(Context ctx, String[] args) {
-                executed.set(true);
-            }
-        });
-
-        executor.ExecByInput("test", null, new String[0]); // чекаем что не реагирует на инпут от пользователя
-        assertFalse(executed.get());
-
-        executor.ExecByInternal("test", null, new String[0]);
-        assertTrue(executed.get());
-    }
-    @Test
-    void inputCommandShouldExecute() {
-        var registry = new RegistryCommand();
-        var executor = new CommandExecutor(registry);
-
-        var executed = new AtomicBoolean(false);
-
-        registry.register("test", new BaseCommand() {
-            @Override
-            public boolean isForUserInput() {
-                return true;
-            }
-
-            @Override
-            public void execute(Context ctx, String[] args) {
-                executed.set(true);
-            }
-        });
-
-        executor.ExecByInput("test", null, new String[0]);
-        assertTrue(executed.get());
+        Context ctx = new Context(null, update, null, null);
+        assertEquals(CommandTrigger.USER_INPUT, ctx.trigger());
     }
 
     @Test
-    void commandShouldReceiveArguments() {
-        var registry = new RegistryCommand();
-        var executor = new CommandExecutor(registry);
+    void shouldReturnCallbackWhenCallbackExists() {
+        Update update = new Update();
+        update.setCallbackQuery(new CallbackQuery());
 
-        var correctArgs = new AtomicBoolean(false);
-
-        registry.register("test", new BaseCommand() {
-
-            @Override
-            public boolean isForUserInput() {
-                return true;
-            }
-
-            @Override
-            public void execute(Context ctx, String[] args) {
-                correctArgs.set(
-                        args.length == 1 &&
-                                args[0].equals("testString")
-                );
-            }
-        });
-
-        executor.ExecByInput("test", null, new String[]{"testString"});
-
-        assertTrue(correctArgs.get());
+        Context ctx = new Context(null, update, null, null);
+        assertEquals(CommandTrigger.CALLBACK, ctx.trigger());
     }
 
     @Test
-    void alertFromCommandShouldExecute() {
-        var registry = new RegistryCommand();
-        var executor = new CommandExecutor(registry);
+    void shouldReturnMessageEditedWhenEditedMessageExists() {
+        Update update = new Update();
+        update.setEditedMessage(new Message());
 
-        var alertExecuted = new AtomicBoolean(false);
-
-        registry.register("test", new BaseCommand() {
-
-            @Override
-            public boolean isForUserInput() {
-                return true;
-            }
-
-            @Override
-            public void execute(Context ctx, String[] args) {
-
-            }
-
-            @Override
-            public void executeAlert(Context ctx) {
-                alertExecuted.set(true);
-            }
-        });
-
-        Context ctx = new Context(
-                new Message(),
-                new OkHttpTelegramClient("123"),
-                new CallbackQuery(),
-                new DialogManager(new RegistryUser()),
-                new RegistryUser()
-        );
-
-        executor.ExecByInput("test", ctx, null);
-        assertTrue(alertExecuted.get());
+        Context ctx = new Context(null, update, null, null);
+        assertEquals(CommandTrigger.MESSAGE_EDITED, ctx.trigger());
     }
 
+    @Test
+    void shouldReturnUnknownWhenNoConditionsMatch() {
+        Update update = new Update();   // ни одно поле не задано
 
+        Context ctx = new Context(null, update, null, null);
+        assertEquals(CommandTrigger.UNKNOWN, ctx.trigger());
+    }
 }
