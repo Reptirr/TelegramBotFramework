@@ -1,40 +1,61 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Context;
-import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryDialogState;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotUser;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class DialogManager {
-    RegistryDialogState registryDialogState;
+    private final Logger logger = LoggerFactory.getLogger(DialogManager.class);
 
-    public DialogManager(RegistryDialogState registryDialogState) {
-        this.registryDialogState = registryDialogState;
+    RegistryUser registryUser;
+
+    public DialogManager(RegistryUser registryUser) {
+        this.registryUser = registryUser;
     }
 
-    /**
-    * @return true, если диалог обрабатывается, false если диалога нет
-    */
-    public boolean executeDialogIfExists(Context ctx) {
-        Long userId = ctx.getMessage().getFrom().getId();
-        if (registryDialogState.isDialogExists(userId)) {
-            UserDialogState state = registryDialogState.get(userId);
-            state.timeLastAction = Long.valueOf(ctx.getMessage().getDate());
-            boolean isFinished = state.dialog.nextStep(ctx.getMessage().getFrom().getId(), ctx, ctx.getMessage().getText(), registryDialogState);
 
-            if (isFinished) {
-                killDialog(userId);
-            }
-            return true;
+    /**
+     * @return true, если диалог обрабатывается, false если диалога нет
+     */
+    public boolean executeDialogIfExists(long id, Context ctx) {
+        if (ctx == null) {
+            logger.warn("Null context detected for user {}", id);
         }
-        return false;
+
+        BotUser user = registryUser.getBotUser(id);
+        if (user == null) {
+            logger.warn("Cant find user {}", id);
+            return false;
+        }
+        UserDialogState state = user.getDialogState();
+
+        if (state == null) {
+            logger.debug("Cant find dialog for user {}", id);
+            return false;
+        }
+
+        state.timeLastAction = System.currentTimeMillis();
+
+        DialogStatus status = state.dialog.nextStep(ctx, state);
+        if (status == DialogStatus.FINISHED) {
+            killDialog(id);
+        }
+
+        return true;
     }
 
     private void killDialog(Long userId) {
-        registryDialogState.remove(userId);
+        BotUser user = registryUser.getBotUser(userId);
+        user.setDialogState(null);
     }
 
-    public void startDialog(BaseDialog dialog, Long userId, Context ctx) {
-        registryDialogState.createDialog(userId, dialog, Long.valueOf(ctx.getMessage().getDate()));
-        executeDialogIfExists(ctx);
+    public boolean startDialog(BaseDialog dialog, Long userId, Context ctx) {
+        BotUser user = registryUser.getBotUser(userId);
+        if (user == null) return false;
+        user.setDialogState(new UserDialogState(dialog));
+        return executeDialogIfExists(userId, ctx);
     }
 }

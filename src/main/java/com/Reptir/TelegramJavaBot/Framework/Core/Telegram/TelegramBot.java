@@ -1,11 +1,14 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.Telegram;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.TelegramCommandExecutor;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandExecutor;
 import com.Reptir.TelegramJavaBot.Framework.Core.Handlers.UpdateHandler;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.*;
+import com.Reptir.TelegramJavaBot.Framework.Core.ThreadLogic.ThreadId;
 import com.Reptir.TelegramJavaBot.Framework.Core.TimeoutLogic.TimeoutService;
 import com.Reptir.TelegramJavaBot.Framework.Core.TimeoutLogic.TimeoutThreadManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -14,7 +17,8 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-public class Bot {
+public class TelegramBot {
+    private final Logger logger = LoggerFactory.getLogger(TelegramBot.class);
     private final String token;
     private boolean isStarted = false;
 
@@ -22,13 +26,12 @@ public class Bot {
     private final RegistryThread registryThread;
     private TelegramBotsLongPollingApplication app;
     private final RegistryUser registryUser = new RegistryUser();
-    private final RegistryDialogState registryDialogState = new RegistryDialogState();
-    private final TimeoutService timeoutService = new TimeoutService(registryDialogState, 10);
+    private final TimeoutService timeoutService = new TimeoutService(10, registryUser);
     private final TimeoutThreadManager timeoutThreadManager = new TimeoutThreadManager(timeoutService, 1);
 
-    public Bot(String token, RegistryCommand registryCommand) {
+    public TelegramBot(String token) {
         this.token = token;
-        this.registryCommand = registryCommand;
+        this.registryCommand = new RegistryCommand();
         registryThread = new RegistryThread();
     }
 
@@ -37,16 +40,15 @@ public class Bot {
 
             app = new TelegramBotsLongPollingApplication();
             TelegramClient tgClient = new OkHttpTelegramClient(token);
-            TelegramCommandExecutor executor = new TelegramCommandExecutor(registryCommand);
+            CommandExecutor executor = new CommandExecutor(registryCommand);
 
             timeoutThreadManager.startChecking();
 
             try {
-                app.registerBot(token, new UpdateHandler(registryCommand, tgClient, executor, registryThread, registryUser, registryDialogState));
+                app.registerBot(token, new UpdateHandler(registryCommand, tgClient, executor, registryThread, registryUser));
                 isStarted = true;
             } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-                // logging in future
+                logger.error("Failed to start bot", e);
             }
 
         }
@@ -59,15 +61,15 @@ public class Bot {
                 app.close();
                 isStarted = false;
                 registryThread.shutdown();
+                timeoutThreadManager.stopChecking();
             } catch (Exception e) {
-                throw new RuntimeException(e);
-                // logging in future
+                logger.error("Failed to stop bot", e);
             }
 
         }
     }
 
-    public Map<String, Future<?>> getThreads() {
+    public Map<ThreadId, Future<?>> getThreads() {
         return registryThread.getThreads();
     }
 
@@ -75,12 +77,12 @@ public class Bot {
         return registryUser.getUsers();
     }
 
-    public void addCommand(BaseCommand command) {
-        registryCommand.register(command.getName(), command);
+    public void addCommand(String name, BaseCommand command) {
+        registryCommand.register(name, command);
     }
 
-    public void removeCommand(BaseCommand command) {
-        registryCommand.remove(command.getName());
+    public void removeCommand(String name) {
+        registryCommand.remove(name);
     }
 
     public void setTimeoutDialog(short seconds) {

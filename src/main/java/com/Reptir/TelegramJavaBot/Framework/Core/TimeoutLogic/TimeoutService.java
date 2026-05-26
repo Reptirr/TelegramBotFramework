@@ -1,17 +1,18 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.TimeoutLogic;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.UserDialogState;
-import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryDialogState;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotUser;
+import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
 
 import java.time.Duration;
 import java.time.Instant;
 
 public class TimeoutService {
     private long timeoutSeconds;
-    private final RegistryDialogState registryDialogState;
+    private final RegistryUser registryUser;
 
-    public TimeoutService(RegistryDialogState registryDialogState, long timeoutSeconds) {
-        this.registryDialogState = registryDialogState;
+    public TimeoutService(long timeoutSeconds, RegistryUser registryUser) {
+        this.registryUser = registryUser;
         this.timeoutSeconds = timeoutSeconds;
     }
 
@@ -19,15 +20,18 @@ public class TimeoutService {
         this.timeoutSeconds = timeoutSeconds;
     }
 
-    void checkTimeout() { // проверяет регистр диалогов на наличие таймаутов
-        for (UserDialogState state : registryDialogState.getMap().values()) {
+    public void checkTimeout() { // проверяет регистр диалогов на наличие таймаутов
+        for (BotUser user : registryUser.getUsers().values()) {
+            UserDialogState state = user.getDialogState();
+            if (state == null) continue;
+
             Instant now = Instant.now(); // время прямо сейчас
-            Instant lastAction = Instant.ofEpochSecond(state.timeLastAction); // время последнего действия с диалогом
+            Instant lastAction = Instant.ofEpochMilli(state.timeLastAction); // время последнего действия с диалогом
 
             Duration timeDelta = Duration.between(lastAction, now); // разность
 
             if (timeDelta.toSeconds() > timeoutSeconds) {  // логика таймаута
-                registryDialogState.remove(state.userId);
+                user.setDialogState(null);
             }
         }
     }

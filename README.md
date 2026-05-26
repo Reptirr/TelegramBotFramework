@@ -6,9 +6,9 @@ This framework was designed to avoid rewriting callback handling, dialog state m
 
 ---
 
-## ✨ Features
+## Features
 
-* Command system (user input & internal callback commands)
+* Command system (user input and internal callback commands)
 * Dialog system with step-based state management
 * Automatic dialog timeout handling
 * Inline keyboard builder
@@ -17,33 +17,10 @@ This framework was designed to avoid rewriting callback handling, dialog state m
 * Builder-style bot initialization
 * Clear separation between Core and Realizations
 
----
-
-## 📁 Project Structure
-
-```
-Framework
- └── Core
-      ├── CommandLogic
-      ├── DialogLogic
-      ├── Handlers
-      ├── MenuLogic
-      ├── Registries
-      ├── Telegram
-      └── TimeoutLogic
-
-Realizations
- ├── CommandsRealization
- ├── DialogRealization
- └── MenuRealization
-```
-
-* **Core** — framework internals
-* **Realizations** — your actual bot implementation
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Create a bot in Telegram
 
@@ -55,30 +32,25 @@ Get your bot token from `@BotFather`.
 public class Main {
     public static void main(String[] args) {
         Bot bot = BotBuilder.builder("YOUR_TOKEN")
-                .command(new StartCommand())
-                .command(new DialogCommand())
-                .command(new ActionCommand())
+                .addCommand("/start", new StartCommand())
                 .build();
 
-        new Thread(bot::start).start();
+        bot.start();
     }
 }
 ```
 
 ---
 
-## 🧩 Creating a Command
+## Creating a Command
 
 Implement `BaseCommand`:
 
 ```java
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
+
 public class StartCommand implements BaseCommand {
-
-    @Override
-    public String getName() {
-        return "/start";
-    }
-
     @Override
     public boolean isForUserInput() {
         return true;
@@ -86,39 +58,43 @@ public class StartCommand implements BaseCommand {
 
     @Override
     public void execute(Context ctx, String[] args) {
-        // your logic here
+        // example logic
+        ctx.getMessenger().sendText(ctx.getMessage().getChat().getId(), "You wrote: " + ctx.getmessage().getText());
     }
 }
 ```
 
-* `isForUserInput()` → true if command should be triggered by message text
+* `isForUserInput()` -> true if command should be triggered by message text
 * false if it should only be triggered internally (e.g., callback)
 
 ---
 
-## 💬 Creating a Dialog
+## Creating a Dialog
 
+Dialog provides a nextStep() method executed on each user message during an active dialog.
 Implement `BaseDialog`:
 
 ```java
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.UserDialogState;
+import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogStatus;
+
 public class MyDialog implements BaseDialog {
 
     @Override
-    public boolean nextStep(Long userId, Context ctx, String input, RegistryDialogState registry) {
-        UserDialogState state = registry.get(userId);
+    public DialogStatus nextStep(Context ctx, UserDialogState dialogState) {
+        return switch (dialogState.currentStep) {
+            case 0 -> {
+                ctx.getMessenger().sendText(ctx.getMessage().getChatId(), "You are on step 1");
+                yield DialogStatus.CONTINUE;
+            }
+            case 1 -> {
+                ctx.getMessenger().sendText(ctx.getMessage().getChatId(), "You are on step 2. Finish dialog");
+                yield DialogStatus.FINISHED;
+            }
+            default -> DialogStatus.FINISHED;
+        };
 
-        switch (state.currentStep) {
-            case 0:
-                // ask something
-                state.currentStep = 1;
-                return false;
-
-            case 1:
-                // handle input
-                return true; // finish dialog
-        }
-
-        return true;
     }
 }
 ```
@@ -126,75 +102,23 @@ public class MyDialog implements BaseDialog {
 Start dialog inside a command:
 
 ```java
-ctx.getDialogManager().startDialog(new MyDialog(), userId, ctx);
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
+
+class DialogStartCommand implements BaseCommand {
+    void execute(Context ctx, String[] args) {
+        if (ctx.getCallback() != null)
+            ctx.getDialogManager().startDialog(new MyDialog(), ctx.getMessage().getFrom().getId(), ctx);
+    }
+}
 ```
 
 ---
 
-## ⏳ Dialog Timeout
-
-Dialogs are automatically removed after inactivity.
-
-You can configure timeout duration:
-
-```java
-bot.setTimeoutDialog((short) 30); // seconds
-```
-
----
-
-## 🧠 Architecture Overview
-
-* `Bot` — main facade
-* `BotBuilder` — fluent configuration
-* `Context` — wrapper around Telegram update data
-* `Registry*` — centralized state containers
-* `DialogManager` — dialog execution controller
-* `TelegramCommandExecutor` — command dispatcher
-* `TimeoutService` — dialog expiration logic
-
----
-
-## 🔧 Threading Model
-
-Commands are executed using virtual threads:
-
-```
-Executors.newVirtualThreadPerTaskExecutor()
-```
-
-Each update is processed asynchronously to prevent blocking.
-
----
-
-## 🎯 Design Goals
-
-* Avoid repetitive Telegram boilerplate
-* Provide structured dialog handling
-* Keep architecture modular
-* Stay lightweight and framework-oriented
-* Make future bots easier to build
-
----
-
-## 📌 Notes
+##  Notes
 
 * In-memory storage (no persistence by default)
 * Suitable for small to medium bots
-* Easily extendable for custom storage or middleware
 
 ---
-
-## 🛠 Possible Future Improvements
-
-* Middleware support
-* Event system
-* Pluggable storage (Redis / Database)
-* Metrics & monitoring
-* Rate limiting
-
----
-
-## 📜 License
-
-Free to use and modify.
+<p align="center">Made by Reptir</p>

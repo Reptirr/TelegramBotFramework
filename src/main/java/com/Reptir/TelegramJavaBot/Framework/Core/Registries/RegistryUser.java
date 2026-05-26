@@ -1,5 +1,7 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.Registries;
 
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotUser;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,7 +18,7 @@ public class RegistryUser {
         return users;
     }
 
-    public void addBotUserIfNotInRegistry(BotUser botUser) {
+    public void addBotUserIfNotRegistered(BotUser botUser) {
         if (!users.containsKey(botUser.getId())) {
             users.put(botUser.getId(), botUser);
         }
