@@ -54,6 +54,6 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
 
         Context ctx = new Context(new Messenger(tgClient), update, dialogManager, registryUser);
 
-        commandExecutor.execCommand(commandName, ctx);
+        threadRegistry.createThread(() -> commandExecutor.execCommand(commandName, ctx));
     }
 }
