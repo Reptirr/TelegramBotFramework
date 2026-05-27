@@ -5,7 +5,7 @@ import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
 
 public class EmptyCommand implements BaseCommand {
     @Override
-    public void execute(Context ctx, String[] args) {
+    public void execute(Context ctx) {
 
     }
 }
