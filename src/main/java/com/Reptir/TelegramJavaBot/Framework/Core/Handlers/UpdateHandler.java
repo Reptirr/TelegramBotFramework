@@ -38,8 +38,19 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     @SneakyThrows
     @Override
     public void consume(Update update) {
-        String[] parts = update.getMessage().getText().split(" ");
-        String commandName = parts[0];
+        String commandName;
+
+        if (update.hasMessage() && update.getMessage().hasText()) {                    // Message
+            commandName = update.getMessage().getText().split(" ")[0];
+        } else if (update.hasEditedMessage() && update.getEditedMessage().hasText()) { // EditedMessage !
+            commandName = update.getEditedMessage().getText().split(" ")[0];
+        } else if (update.hasCallbackQuery()) {                                        // CallbackQuery
+            commandName = update.getCallbackQuery().getData().split(":")[0];
+        } else {
+            logger.info("Unknown update type. Skipping");
+            return;
+        }
+
 
         Context ctx = new Context(new Messenger(tgClient), update, dialogManager, registryUser);
 
