@@ -2,9 +2,11 @@ package com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.ChatType;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Messenger;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 public record Context(Messenger messenger, Update update, DialogManager dialogManager, RegistryUser registryUser) {
@@ -45,6 +47,22 @@ public record Context(Messenger messenger, Update update, DialogManager dialogMa
         throw new IllegalStateException("Update does not contain user");
     }
 
+    public Chat chat() {
+        if (update.hasMessage()) {
+            return update.getMessage().getChat();
+        }
+
+        if (update.hasEditedMessage()) {
+            return update.getEditedMessage().getChat();
+        }
+
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage() != null) {
+            return update.getCallbackQuery().getMessage().getChat();
+        }
+
+        throw new IllegalStateException("Update does not contain chat");
+    }
+
     public Message message() {
         if (update.hasMessage()) {
             return update.getMessage();
@@ -56,4 +74,13 @@ public record Context(Messenger messenger, Update update, DialogManager dialogMa
 
         throw new IllegalStateException("Update does not contain message");
     }
+
+    public ChatType chatType() {
+        Chat chat = chat();
+        if (chat == null) return null;
+
+        return ChatType.map(chat.getType());
+    }
+
+
 }

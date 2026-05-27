@@ -1,5 +1,6 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.TriggerLogic.TriggerCollections;
 
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.TriggerLogic.Trigger;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -19,9 +20,9 @@ public class TriggerOr implements Trigger {
     }
 
     @Override
-    public boolean match(Update update) {
+    public boolean match(Context ctx) {
         for (Trigger trigger : triggers) {
-            if (trigger.match(update)) return true;
+            if (trigger.match(ctx)) return true;
         }
 
         return false;

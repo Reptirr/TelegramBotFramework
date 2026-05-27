@@ -49,7 +49,7 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
             return;
         }
 
-        Set<BaseCommand> matchedCommands = commandRegistry.getMatched(update);
+        Set<BaseCommand> matchedCommands = commandRegistry.getMatched(ctx);
         commandExecutor.executeAll(matchedCommands, ctx);
     }
 }
