@@ -2,11 +2,31 @@ package com.Reptir.TelegramJavaBot.Framework.Core.TriggerLogic;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.ChatType;
-import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.Objects;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.UpdateType;
 
 public class Triggers {
+    // =========
+    // Вентили
+    // =========
+    public static Trigger and(Trigger... triggers) {
+        return ctx -> {
+            for (Trigger trigger : triggers) {
+                if (!trigger.match(ctx)) return false;
+            }
+            return true;
+        };
+    }
+    public static Trigger or(Trigger... triggers) {
+        return ctx -> {
+            for (Trigger trigger : triggers) {
+                if (trigger.match(ctx)) return true;
+            }
+
+            return false;
+        };
+    }
+
+
     // ==========
     // Text work
     // ==========
@@ -45,10 +65,12 @@ public class Triggers {
     }
 
     // =======
-    // Chat work
+    // Type work
     // =======
     public static Trigger chatType(ChatType type) {
         return ctx -> ctx.chatType() == type;
     }
-
+    public static Trigger updateType(UpdateType type) {
+        return ctx -> ctx.updateType() == type;
+    }
 }

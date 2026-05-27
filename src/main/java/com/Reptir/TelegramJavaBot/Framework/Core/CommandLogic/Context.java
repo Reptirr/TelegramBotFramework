@@ -4,23 +4,24 @@ import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.ChatType;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Messenger;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.UpdateType;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 public record Context(Messenger messenger, Update update, DialogManager dialogManager, RegistryUser registryUser) {
-    public CommandTrigger trigger() {
+    public UpdateType updateType() {
         if (update.hasMessage()) {
-            return CommandTrigger.USER_INPUT;
+            return UpdateType.USER_INPUT;
         }
         if (update.hasCallbackQuery()) {
-            return CommandTrigger.CALLBACK;
+            return UpdateType.CALLBACK;
         }
         if (update.hasEditedMessage()) {
-            return CommandTrigger.MESSAGE_EDITED;
+            return UpdateType.MESSAGE_EDITED;
         }
-        return CommandTrigger.UNKNOWN;
+        return UpdateType.UNKNOWN;
     }
 
     public long chatId() {

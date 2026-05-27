@@ -1,7 +1,7 @@
 package CommandLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandTrigger;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.UpdateType;
 import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,7 +17,7 @@ public class CommandLogicTest {
         update.setMessage(new Message());   // сам объект Message может быть пустым, важно что не null
 
         Context ctx = new Context(null, update, null, null);
-        assertEquals(CommandTrigger.USER_INPUT, ctx.trigger());
+        assertEquals(UpdateType.USER_INPUT, ctx.updateType());
     }
 
     @Test
@@ -26,7 +26,7 @@ public class CommandLogicTest {
         update.setCallbackQuery(new CallbackQuery());
 
         Context ctx = new Context(null, update, null, null);
-        assertEquals(CommandTrigger.CALLBACK, ctx.trigger());
+        assertEquals(UpdateType.CALLBACK, ctx.updateType());
     }
 
     @Test
@@ -35,7 +35,7 @@ public class CommandLogicTest {
         update.setEditedMessage(new Message());
 
         Context ctx = new Context(null, update, null, null);
-        assertEquals(CommandTrigger.MESSAGE_EDITED, ctx.trigger());
+        assertEquals(UpdateType.MESSAGE_EDITED, ctx.updateType());
     }
 
     @Test
@@ -43,6 +43,6 @@ public class CommandLogicTest {
         Update update = new Update();   // ни одно поле не задано
 
         Context ctx = new Context(null, update, null, null);
-        assertEquals(CommandTrigger.UNKNOWN, ctx.trigger());
+        assertEquals(UpdateType.UNKNOWN, ctx.updateType());
     }
 }

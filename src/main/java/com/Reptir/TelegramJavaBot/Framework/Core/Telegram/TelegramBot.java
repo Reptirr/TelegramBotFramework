@@ -3,7 +3,6 @@ package com.Reptir.TelegramJavaBot.Framework.Core.Telegram;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandEntry;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandExecutor;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandTrigger;
 import com.Reptir.TelegramJavaBot.Framework.Core.Handlers.UpdateHandler;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.*;
 import com.Reptir.TelegramJavaBot.Framework.Core.ThreadLogic.ThreadId;
