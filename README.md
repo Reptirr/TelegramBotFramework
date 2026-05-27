@@ -59,7 +59,7 @@ public class StartCommand implements BaseCommand {
     @Override
     public void execute(Context ctx, String[] args) {
         // example logic
-        ctx.getMessenger().sendText(ctx.getMessage().getChat().getId(), "You wrote: " + ctx.getmessage().getText());
+        ctx.getMessenger().sendText(ctx.getMessage().getChat().getId(), "You wrote: " + ctx.getMessage().getText());
     }
 }
 ```
