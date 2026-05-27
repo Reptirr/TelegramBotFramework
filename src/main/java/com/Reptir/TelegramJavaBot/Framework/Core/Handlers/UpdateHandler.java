@@ -12,8 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import lombok.SneakyThrows;
 
-import java.util.Arrays;
-
 public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     private final Logger logger = LoggerFactory.getLogger(UpdateHandler.class);
     RegistryCommand commandRegistry;
@@ -38,22 +36,8 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     @SneakyThrows
     @Override
     public void consume(Update update) {
-        String commandName;
-
-        if (update.hasMessage() && update.getMessage().hasText()) {                    // Message
-            commandName = update.getMessage().getText().split(" ")[0];
-        } else if (update.hasEditedMessage() && update.getEditedMessage().hasText()) { // EditedMessage !
-            commandName = update.getEditedMessage().getText().split(" ")[0];
-        } else if (update.hasCallbackQuery()) {                                        // CallbackQuery
-            commandName = update.getCallbackQuery().getData().split(":")[0];
-        } else {
-            logger.info("Unknown update type. Skipping");
-            return;
-        }
-
-
         Context ctx = new Context(new Messenger(tgClient), update, dialogManager, registryUser);
 
-        threadRegistry.createThread(() -> commandExecutor.execCommand(commandName, ctx));
+        commandExecutor.execCommand(ctx);
     }
 }

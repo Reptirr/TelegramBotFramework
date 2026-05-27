@@ -1,48 +1,35 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.Registries;
 
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandEntry;
+import com.Reptir.TelegramJavaBot.Framework.Core.TriggerLogic.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class RegistryCommand {
-    private final Map<String, CommandEntry> commands = new HashMap<>();
+    private final Map<Trigger, CommandEntry> commands = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(RegistryCommand.class);
 
-    public void register(String name, CommandEntry entry) {
-        if (commands.containsKey(name)) {
-            logger.warn("CommandEntry '{}' already exists, skipping", name);
+    public void register(Trigger trigger, CommandEntry entry) {
+        if (Objects.equals(commands.get(trigger), entry)) {
+            logger.warn("Entry trigger - command already exists. Skipping");
             return;
         }
 
-        commands.put(name, entry);
-        logger.info("CommandEntry '{}' was registered", name);
+        commands.put(trigger, entry);
     }
 
-    public void remove(String name) {
-        if (!commands.containsKey(name)) {
-            logger.warn("Command '{}' not find, cannot remove", name);
-            return;
+    public Set<BaseCommand> get(Update update) {
+        Set<BaseCommand> resultCommands = new HashSet<>();
+        for (Map.Entry<Trigger, CommandEntry> entry : commands.entrySet()) {
+            if (entry.getKey().match(update)) resultCommands.add(entry.getValue().command());
         }
-        logger.info("Command '{}' was removed", name);
-        commands.remove(name);
+
+        return resultCommands;
     }
-
-    public CommandEntry get(String commandName) {
-        return commands.get(commandName);
-    }
-
-    public Map<String, CommandEntry> getMap() {
-        return commands;
-    }
-
-    public boolean hasCommandEntry(String commandName) {
-        return commands.containsKey(commandName);
-    }
-
-
 
 }
