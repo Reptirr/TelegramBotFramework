@@ -38,40 +38,6 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     @SneakyThrows
     @Override
     public void consume(Update update) {
-//        if (update.hasMessage() && update.getMessage().getFrom() != null) {
-//            registryUser.addBotUserIfNotRegistered(new BotUser(update.getMessage().getFrom()));         // добавление юзера в регистр
-//        } else if (update.hasCallbackQuery() && update.getCallbackQuery().getFrom() != null) {
-//            registryUser.addBotUserIfNotRegistered(new BotUser(update.getCallbackQuery().getFrom()));
-//        }
-//
-//        if (update.hasMessage() && !update.getMessage().getText().isBlank()) {             // обработка сообщений
-//
-//            Message message = update.getMessage();
-//
-//            Context ctx = new Context(message, tgClient, null, dialogManager, registryUser);
-//            String[] parts = message.getText().split(" ");
-//            String input = parts[0];
-//            String[] args = Arrays.copyOfRange(parts, 1, parts.length);
-//
-//
-//            if (dialogManager.executeDialogIfExists(ctx.getMessage().getFrom().getId(), ctx)) return; // диалоги
-//
-//            threadRegistry.createThread(() -> commandExecutor.ExecByInput(input, ctx, args)); // команда
-//
-//
-//        } else if (update.hasCallbackQuery()) {                                            // обработка callback
-//            if (update.getCallbackQuery().getMessage() instanceof Message message) {
-//                String callbackData = update.getCallbackQuery().getData();
-//
-//                String[] parts = callbackData.split(":");
-//
-//                Context ctx = new Context(message, tgClient, update.getCallbackQuery(), dialogManager, registryUser);
-//                String commandName = parts[0];
-//                String[] args = Arrays.copyOfRange(parts, 1, parts.length);
-//
-//                threadRegistry.createThread(() -> commandExecutor.ExecByInternal(commandName, ctx, args));
-//            }
-//        }
         String[] parts = update.getMessage().getText().split(" ");
         String commandName = parts[0];
 
