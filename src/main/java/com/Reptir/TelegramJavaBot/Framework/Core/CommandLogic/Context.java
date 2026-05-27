@@ -4,6 +4,7 @@ import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Messenger;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 public record Context(Messenger messenger, Update update, DialogManager dialogManager, RegistryUser registryUser) {
@@ -30,5 +31,29 @@ public record Context(Messenger messenger, Update update, DialogManager dialogMa
         }
 
         throw new IllegalStateException("Update does not contain chat id");
+    }
+
+    public User user() {
+        if (update.hasMessage()) {
+            return update.getMessage().getFrom();
+        } else if (update.hasEditedMessage()) {
+            return update.getEditedMessage().getFrom();
+        } else if (update.hasCallbackQuery()) {
+            return update.getCallbackQuery().getFrom();
+        }
+
+        throw new IllegalStateException("Update does not contain user");
+    }
+
+    public Message message() {
+        if (update.hasMessage()) {
+            return update.getMessage();
+        } else if (update.hasEditedMessage()) {
+            return update.getEditedMessage();
+        } else if (update.hasCallbackQuery()) {
+            return (Message) update.getCallbackQuery().getMessage();
+        }
+
+        throw new IllegalStateException("Update does not contain message");
     }
 }

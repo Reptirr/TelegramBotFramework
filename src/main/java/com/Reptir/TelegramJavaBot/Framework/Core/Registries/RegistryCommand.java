@@ -23,7 +23,7 @@ public class RegistryCommand {
         commands.put(trigger, entry);
     }
 
-    public Set<BaseCommand> get(Update update) {
+    public Set<BaseCommand> getMatched(Update update) {
         Set<BaseCommand> resultCommands = new HashSet<>();
         for (Map.Entry<Trigger, CommandEntry> entry : commands.entrySet()) {
             if (entry.getKey().match(update)) resultCommands.add(entry.getValue().command());

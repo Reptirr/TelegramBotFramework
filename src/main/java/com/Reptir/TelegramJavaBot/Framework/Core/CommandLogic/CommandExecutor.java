@@ -4,7 +4,6 @@ import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Set;
 
@@ -18,16 +17,14 @@ public class CommandExecutor {
         this.registryThread = registryThread;
     }
 
-    public void execCommand(Context ctx) {
+    public void executeAll(Set<BaseCommand> commands, Context ctx) {
         if (ctx == null) {
             logger.warn("Detected null ctx, skipping");
             return;
         }
 
-        Set<BaseCommand> triggeredCommands = registryCommand.get(ctx.update());
-
-        for (BaseCommand command : triggeredCommands) {
-            command.execute(ctx);
+        for (BaseCommand command : commands) {
+            registryThread.createThread(() -> command.execute(ctx));
         }
     }
 }

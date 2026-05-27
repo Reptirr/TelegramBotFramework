@@ -1,9 +1,11 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.Handlers;
 
+import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandExecutor;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.*;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotUser;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Messenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,8 @@ import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateC
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import lombok.SneakyThrows;
+
+import java.util.Set;
 
 public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     private final Logger logger = LoggerFactory.getLogger(UpdateHandler.class);
@@ -37,7 +41,15 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     @Override
     public void consume(Update update) {
         Context ctx = new Context(new Messenger(tgClient), update, dialogManager, registryUser);
+        registryUser.addBotUserIfNotRegistered(new BotUser(ctx.user())); // добавление юзера в регистр
+        BotUser currentUser = registryUser.getBotUser(ctx.user().getId());
 
-        commandExecutor.execCommand(ctx);
+        if (currentUser.getDialogState() != null) {          // исполнение диалога
+            dialogManager.executeDialogIfExists(currentUser.getId(), ctx);
+            return;
+        }
+
+        Set<BaseCommand> matchedCommands = commandRegistry.getMatched(update);
+        commandExecutor.executeAll(matchedCommands, ctx);
     }
 }
