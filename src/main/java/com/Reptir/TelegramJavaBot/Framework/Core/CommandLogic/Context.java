@@ -5,26 +5,27 @@ import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.ChatType;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Messenger;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.UpdateType;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
-public record Context(Messenger messenger, Update update, DialogManager dialogManager, RegistryUser registryUser) {
+public record Context(
+        Messenger messenger,
+        Update update,
+        DialogManager dialogManager,
+        RegistryUser registryUser
+) {
+
     public UpdateType updateType() {
-        if (update.hasMessage()) {
-            return UpdateType.USER_INPUT;
-        }
-        if (update.hasCallbackQuery()) {
-            return UpdateType.CALLBACK;
-        }
-        if (update.hasEditedMessage()) {
-            return UpdateType.MESSAGE_EDITED;
-        }
+        if (update.hasMessage()) return UpdateType.USER_INPUT;
+        if (update.hasCallbackQuery()) return UpdateType.CALLBACK;
+        if (update.hasEditedMessage()) return UpdateType.MESSAGE_EDITED;
         return UpdateType.UNKNOWN;
     }
 
-    public long chatId() {
+    public Long chatId() {
         if (update.hasMessage()) {
             return update.getMessage().getChat().getId();
         } else if (update.hasEditedMessage()) {
@@ -32,8 +33,7 @@ public record Context(Messenger messenger, Update update, DialogManager dialogMa
         } else if (update.hasCallbackQuery()) {
             return update.getCallbackQuery().getMessage().getChatId();
         }
-
-        throw new IllegalStateException("Update does not contain chat id");
+        return null;
     }
 
     public User user() {
@@ -44,36 +44,46 @@ public record Context(Messenger messenger, Update update, DialogManager dialogMa
         } else if (update.hasCallbackQuery()) {
             return update.getCallbackQuery().getFrom();
         }
-
-        throw new IllegalStateException("Update does not contain user");
+        return null;
     }
 
     public Chat chat() {
         if (update.hasMessage()) {
             return update.getMessage().getChat();
         }
-
         if (update.hasEditedMessage()) {
             return update.getEditedMessage().getChat();
         }
-
         if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage() != null) {
             return update.getCallbackQuery().getMessage().getChat();
         }
-
-        throw new IllegalStateException("Update does not contain chat");
+        return null;
     }
 
     public Message message() {
         if (update.hasMessage()) {
             return update.getMessage();
-        } else if (update.hasEditedMessage()) {
-            return update.getEditedMessage();
-        } else if (update.hasCallbackQuery()) {
-            return (Message) update.getCallbackQuery().getMessage();
         }
 
-        throw new IllegalStateException("Update does not contain message");
+        if (update.hasEditedMessage()) {
+            return update.getEditedMessage();
+        }
+
+        if (update.hasCallbackQuery()) {
+            var msg = update.getCallbackQuery().getMessage();
+            if (msg instanceof Message message) {
+                return message;
+            }
+        }
+
+        return null;
+    }
+
+    public CallbackQuery callbackQuery() {
+        if (update.hasCallbackQuery()) {
+            return update.getCallbackQuery();
+        }
+        return null;
     }
 
     public ChatType chatType() {
@@ -82,6 +92,4 @@ public record Context(Messenger messenger, Update update, DialogManager dialogMa
 
         return ChatType.map(chat.getType());
     }
-
-
 }
