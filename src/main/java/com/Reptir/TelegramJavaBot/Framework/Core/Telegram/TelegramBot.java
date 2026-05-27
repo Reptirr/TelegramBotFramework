@@ -80,7 +80,7 @@ public class TelegramBot {
         return registryUser.getUsers();
     }
 
-    public void addCommand(String name, BaseCommand command, EnumSet<CommandTrigger> triggers) {
+    public void addCommand(String name, EnumSet<CommandTrigger> triggers, BaseCommand command) {
         registryCommand.register(name, new CommandEntry(command, triggers));
     }
 

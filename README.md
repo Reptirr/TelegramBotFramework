@@ -38,13 +38,13 @@ public class Main {
     public static void main(String[] args) {
         TelegramBot bot = new TelegramBot("YOUR_TOKEN");
 
-        bot.addCommand("/start", new StartCommand(), EnumSet.of(
-                CommandTrigger.USER_INPUT 
-        ));
-        bot.addCommand("/dialog", new DialogStartCommand(), EnumSet.of(
+        bot.addCommand("/start", EnumSet.of(
+                CommandTrigger.USER_INPUT
+        ), new StartCommand());
+        bot.addCommand("/dialog", EnumSet.of(
                 CommandTrigger.USER_INPUT,
                 CommandTrigger.CALLBACK
-        ));
+        ), new DialogStartCommand());
 
         bot.start();
     }
