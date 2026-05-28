@@ -7,40 +7,72 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
-public record Context(TelegramContext tgContext, DialogManager dialogManager, RegistryUser registryUser) {
-
+public record Context(
+        TelegramContext tgContext,
+        DialogManager dialogManager,
+        RegistryUser registryUser
+) {
 
     public UpdateType updateType() {
+        if (tgContext == null || tgContext.update() == null) {
+            return UpdateType.UNKNOWN;
+        }
+
         if (tgContext.update().hasMessage()) {
             return UpdateType.USER_INPUT;
         }
+
         if (tgContext.update().hasCallbackQuery()) {
             return UpdateType.CALLBACK;
         }
+
         if (tgContext.update().hasEditedMessage()) {
             return UpdateType.MESSAGE_EDITED;
         }
+
         return UpdateType.UNKNOWN;
     }
+
     public ChatType chatType() {
         Chat chat = chat();
-        if (chat == null) return null;
+
+        if (chat == null) {
+            return null;
+        }
 
         return ChatType.map(chat.getType());
     }
 
-    public long chatId() {
-        if (tgContext.update().hasMessage()) {
-            return tgContext.update().getMessage().getChat().getId();
-        } else if (tgContext.update().hasEditedMessage()) {
-            return tgContext.update().getEditedMessage().getChat().getId();
-        } else if (tgContext.update().hasCallbackQuery()) {
-            return tgContext.update().getCallbackQuery().getMessage().getChatId();
+    public Long chatId() {
+        if (tgContext == null || tgContext.update() == null) {
+            return null;
         }
 
-        throw new IllegalStateException("Update does not contain chat id");
+        if (tgContext.update().hasMessage()) {
+            return tgContext.update().getMessage().getChat().getId();
+        }
+
+        if (tgContext.update().hasEditedMessage()) {
+            return tgContext.update().getEditedMessage().getChat().getId();
+        }
+
+        if (tgContext.update().hasCallbackQuery()
+                && tgContext.update().getCallbackQuery().getMessage() != null) {
+
+            return tgContext.update()
+                    .getCallbackQuery()
+                    .getMessage()
+                    .getChatId();
+        }
+
+        return null;
     }
+
     public Chat chat() {
+        if (tgContext == null || tgContext.update() == null) {
+            return null;
+        }
+
         if (tgContext.update().hasMessage()) {
             return tgContext.update().getMessage().getChat();
         }
@@ -49,40 +81,71 @@ public record Context(TelegramContext tgContext, DialogManager dialogManager, Re
             return tgContext.update().getEditedMessage().getChat();
         }
 
-        if (tgContext.update().hasCallbackQuery() && tgContext.update().getCallbackQuery().getMessage() != null) {
-            return tgContext.update().getCallbackQuery().getMessage().getChat();
+        if (tgContext.update().hasCallbackQuery()
+                && tgContext.update().getCallbackQuery().getMessage() != null) {
+
+            return tgContext.update()
+                    .getCallbackQuery()
+                    .getMessage()
+                    .getChat();
         }
 
-        throw new IllegalStateException("Update does not contain chat");
+        return null;
     }
+
     public User user() {
+        if (tgContext == null || tgContext.update() == null) {
+            return null;
+        }
+
         if (tgContext.update().hasMessage()) {
             return tgContext.update().getMessage().getFrom();
-        } else if (tgContext.update().hasEditedMessage()) {
+        }
+
+        if (tgContext.update().hasEditedMessage()) {
             return tgContext.update().getEditedMessage().getFrom();
-        } else if (tgContext.update().hasCallbackQuery()) {
+        }
+
+        if (tgContext.update().hasCallbackQuery()) {
             return tgContext.update().getCallbackQuery().getFrom();
         }
 
-        throw new IllegalStateException("Update does not contain user");
+        return null;
     }
+
     public Message message() {
-        if (tgContext.update().hasMessage()) {
-            return tgContext.update().getMessage();
-        } else if (tgContext.update().hasEditedMessage()) {
-            return tgContext.update().getEditedMessage();
-        } else if (tgContext.update().hasCallbackQuery()) {
-            return (Message) tgContext.update().getCallbackQuery().getMessage();
+        if (tgContext == null || tgContext.update() == null) {
+            return null;
         }
 
-        throw new IllegalStateException("Update does not contain message");
+        if (tgContext.update().hasMessage()) {
+            return tgContext.update().getMessage();
+        }
+
+        if (tgContext.update().hasEditedMessage()) {
+            return tgContext.update().getEditedMessage();
+        }
+
+        if (tgContext.update().hasCallbackQuery()
+                && tgContext.update().getCallbackQuery().getMessage() != null) {
+
+            return (Message) tgContext.update()
+                    .getCallbackQuery()
+                    .getMessage();
+        }
+
+        return null;
     }
+
     public CallbackQuery callbackQuery() {
+        if (tgContext == null || tgContext.update() == null) {
+            return null;
+        }
+
         if (tgContext.update().hasCallbackQuery()) {
             return tgContext.update().getCallbackQuery();
         }
 
-        throw new IllegalStateException("Update does not contain callbackQuery");
+        return null;
     }
-
 }
