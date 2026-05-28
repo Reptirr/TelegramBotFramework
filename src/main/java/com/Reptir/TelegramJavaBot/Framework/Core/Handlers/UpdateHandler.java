@@ -1,8 +1,9 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.Handlers;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandExecutor;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.TelegramContext;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.*;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotUser;
@@ -40,7 +41,7 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     @SneakyThrows
     @Override
     public void consume(Update update) {
-        Context ctx = new Context(new Messenger(tgClient), update, dialogManager, registryUser);
+        Context ctx = new Context(new TelegramContext(update, new Messenger(tgClient)), dialogManager, registryUser);
         registryUser.addBotUserIfNotRegistered(new BotUser(ctx.user())); // добавление юзера в регистр
         BotUser currentUser = registryUser.getBotUser(ctx.user().getId());
 

@@ -1,7 +1,8 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.TriggerLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.ChatType;
-import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.UpdateType;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.ChatType;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.UpdateType;
 
 public class Triggers {
 
@@ -152,7 +153,17 @@ public class Triggers {
     }
 
     public static Trigger command(String cmd) {
-        return textStartsWith(cmd);
+        return ctx -> {
+            if (ctx.message() == null || !ctx.message().hasText()) {
+                return false;
+            }
+
+            String text = ctx.message().getText();
+
+            return text.startsWith(cmd)
+                    && (text.length() == cmd.length()
+                    || text.charAt(cmd.length()) == ' ');
+        };
     }
 
     public static Trigger privateChat() {

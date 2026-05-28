@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Framework.Core.Telegram;
+package com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic;
 
 public enum UpdateType {
     USER_INPUT,

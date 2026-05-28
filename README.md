@@ -61,12 +61,12 @@ public class Main {
 Implement `BaseCommand`:
 
 ```java
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 
 public class StartCommand implements BaseCommand {
     @Override
-    public void execute(Context ctx, String[] args) {
+    public void execute(com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context ctx, String[] args) {
         // example logic
         ctx.messenger().sendText(ctx.getMessage().getChat().getId(), "You wrote: " + ctx.getmessage().getText());
     }
@@ -81,14 +81,14 @@ Dialog provides a nextStep() method executed on each user message during an acti
 Implement `BaseDialog`:
 
 ```java
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.UserDialogState;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogStatus;
 
 public class MyDialog implements BaseDialog {
 
     @Override
-    public DialogStatus nextStep(Context ctx, UserDialogState dialogState) {
+    public DialogStatus nextStep(com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context ctx, UserDialogState dialogState) {
         return switch (dialogState.currentStep) {
             case 0 -> {
                 ctx.messenger().sendText(ctx.getMessage().getChatId(), "You are on step 1");
@@ -108,7 +108,7 @@ public class MyDialog implements BaseDialog {
 Start dialog inside a command:
 
 ```java
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 
 class DialogStartCommand implements BaseCommand {

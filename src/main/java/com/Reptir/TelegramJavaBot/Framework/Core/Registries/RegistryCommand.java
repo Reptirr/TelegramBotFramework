@@ -2,7 +2,7 @@ package com.Reptir.TelegramJavaBot.Framework.Core.Registries;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandEntry;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.TriggerLogic.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

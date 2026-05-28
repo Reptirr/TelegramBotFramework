@@ -2,7 +2,7 @@ package com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic;
 
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotUser;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +23,7 @@ public class DialogManager {
     public boolean executeDialogIfExists(long id, Context ctx) {
         if (ctx == null) {
             logger.warn("Null context detected for user {}", id);
+            return false;
         }
 
         BotUser user = registryUser.getBotUser(id);
@@ -38,6 +39,8 @@ public class DialogManager {
         }
 
         state.timeLastAction = System.currentTimeMillis();
+
+        logger.debug("Executing dialog userId={} step=", user.getId(), state.currentStep);
 
         DialogStatus status = state.dialog.nextStep(ctx, state);
         if (status == DialogStatus.FINISHED) {
@@ -56,6 +59,9 @@ public class DialogManager {
         BotUser user = registryUser.getBotUser(userId);
         if (user == null) return false;
         user.setDialogState(new UserDialogState(dialog));
+
+        logger.debug("Start dialog userId={}", userId);
+
         return executeDialogIfExists(userId, ctx);
     }
 }

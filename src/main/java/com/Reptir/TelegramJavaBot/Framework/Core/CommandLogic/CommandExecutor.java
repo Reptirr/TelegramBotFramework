@@ -1,5 +1,6 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic;
 
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryCommand;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryThread;
 import org.slf4j.Logger;
