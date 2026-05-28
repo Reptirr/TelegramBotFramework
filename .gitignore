@@ -3,6 +3,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### TODO ###
+TODO.md
+
 ### STS ###
 .apt_generated
 .classpath

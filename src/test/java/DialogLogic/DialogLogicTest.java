@@ -1,14 +1,18 @@
 package DialogLogic;
 
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.TelegramContext;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.BaseDialog;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogStatus;
 import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.UserDialogState;
 import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotUser;
 import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Messenger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,10 +54,16 @@ public class DialogLogicTest {
         User user = new User(1L, "test", false);
         registryUser.addBotUserIfNotRegistered(new BotUser(user));
 
-        dialogManager.startDialog(dialog, user.getId(), null);
+        Context ctx = new Context(
+                new TelegramContext(null, new Messenger(new OkHttpTelegramClient(""))),
+                dialogManager,
+                registryUser
+        );
+
+        dialogManager.startDialog(dialog, user.getId(), ctx);
         assertTrue(step1.get());
 
-        dialogManager.executeDialogIfExists(user.getId(), null);
+        dialogManager.executeDialogIfExists(user.getId(), ctx);
         assertTrue(step2.get());
     }
 
@@ -83,13 +93,19 @@ public class DialogLogicTest {
             }
         };
 
+        Context ctx = new Context(
+                new TelegramContext(null, new Messenger(new OkHttpTelegramClient(""))),
+                dialogManager,
+                registryUser
+        );
+
         BotUser botUser = new BotUser(new User(1L, "test", false));
         registryUser.addBotUserIfNotRegistered(botUser);
 
-        dialogManager.startDialog(dialog, 1L, null);
+        dialogManager.startDialog(dialog, 1L, ctx);
         assertTrue(step1.get());
 
-        dialogManager.executeDialogIfExists(1L, null);
+        dialogManager.executeDialogIfExists(1L, ctx);
         assertFalse(step2.get());
     }
 
@@ -102,10 +118,16 @@ public class DialogLogicTest {
             }
         };
 
+        Context ctx = new Context(
+                new TelegramContext(null, new Messenger(new OkHttpTelegramClient(""))),
+                dialogManager,
+                registryUser
+        );
+
         BotUser botUser = new BotUser(new User(1L, "test", false));
         registryUser.addBotUserIfNotRegistered(botUser);
 
-        dialogManager.startDialog(dialog, 1L, null);
+        dialogManager.startDialog(dialog, 1L, ctx);
         assertNull(registryUser.getBotUser(1L).getDialogState());
     }
 

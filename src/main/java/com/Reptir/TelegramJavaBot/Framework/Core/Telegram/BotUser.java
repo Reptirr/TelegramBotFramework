@@ -10,6 +10,9 @@ public class BotUser {
     public long getId() {
         return user.getId();
     }
+    public User getUser() {
+        return user;
+    }
     public UserDialogState getDialogState() {
         return dialogState;
     }

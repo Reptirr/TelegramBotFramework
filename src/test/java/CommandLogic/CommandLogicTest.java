@@ -1,7 +1,8 @@
 package CommandLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandTrigger;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.TelegramContext;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.UpdateType;
 import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,8 +17,8 @@ public class CommandLogicTest {
         Update update = new Update();
         update.setMessage(new Message());   // сам объект Message может быть пустым, важно что не null
 
-        Context ctx = new Context(null, update, null, null);
-        assertEquals(CommandTrigger.USER_INPUT, ctx.trigger());
+        Context ctx = new Context(new TelegramContext(update, null), null, null);
+        assertEquals(UpdateType.USER_INPUT, ctx.updateType());
     }
 
     @Test
@@ -25,8 +26,8 @@ public class CommandLogicTest {
         Update update = new Update();
         update.setCallbackQuery(new CallbackQuery());
 
-        Context ctx = new Context(null, update, null, null);
-        assertEquals(CommandTrigger.CALLBACK, ctx.trigger());
+        Context ctx = new Context(new TelegramContext(update, null), null, null);
+        assertEquals(UpdateType.CALLBACK, ctx.updateType());
     }
 
     @Test
@@ -34,15 +35,15 @@ public class CommandLogicTest {
         Update update = new Update();
         update.setEditedMessage(new Message());
 
-        Context ctx = new Context(null, update, null, null);
-        assertEquals(CommandTrigger.MESSAGE_EDITED, ctx.trigger());
+        Context ctx = new Context(new TelegramContext(update, null), null, null);
+        assertEquals(UpdateType.MESSAGE_EDITED, ctx.updateType());
     }
 
     @Test
     void shouldReturnUnknownWhenNoConditionsMatch() {
         Update update = new Update();   // ни одно поле не задано
 
-        Context ctx = new Context(null, update, null, null);
-        assertEquals(CommandTrigger.UNKNOWN, ctx.trigger());
+        Context ctx = new Context(new TelegramContext(update, null), null, null);
+        assertEquals(UpdateType.UNKNOWN, ctx.updateType());
     }
 }

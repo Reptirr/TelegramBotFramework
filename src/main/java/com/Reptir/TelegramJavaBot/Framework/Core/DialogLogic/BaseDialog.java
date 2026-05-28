@@ -1,6 +1,6 @@
 package com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
 
 
 public interface BaseDialog {
