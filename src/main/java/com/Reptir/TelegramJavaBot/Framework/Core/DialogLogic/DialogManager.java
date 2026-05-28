@@ -21,11 +21,6 @@ public class DialogManager {
      * @return true, если диалог обрабатывается, false если диалога нет
      */
     public boolean executeDialogIfExists(long id, Context ctx) {
-        if (ctx == null) {
-            logger.warn("Null context detected for user {}", id);
-            return false;
-        }
-
         BotUser user = registryUser.getBotUser(id);
         if (user == null) {
             logger.warn("Cant find user {}", id);
@@ -57,6 +52,10 @@ public class DialogManager {
 
     public boolean startDialog(BaseDialog dialog, Long userId, Context ctx) {
         BotUser user = registryUser.getBotUser(userId);
+        if (ctx == null) {
+            logger.warn("Null context detected for user {}", userId);
+            return false;
+        }
         if (user == null) return false;
         user.setDialogState(new UserDialogState(dialog));
 
