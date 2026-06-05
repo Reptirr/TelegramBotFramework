@@ -11,6 +11,7 @@ import com.Reptir.TelegramJavaBot.Framework.ThreadLogic.ThreadId;
 import com.Reptir.TelegramJavaBot.Framework.TimeoutLogic.TimeoutService;
 import com.Reptir.TelegramJavaBot.Framework.TimeoutLogic.TimeoutThreadManager;
 import com.Reptir.TelegramJavaBot.Framework.TriggerLogic.Trigger;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
@@ -33,6 +34,7 @@ public class TelegramBot {
     private final TimeoutService timeoutService = new TimeoutService(10, registryUser);
     private final TimeoutThreadManager timeoutThreadManager = new TimeoutThreadManager(timeoutService, 1);
 
+    @Getter
     private final Messenger messenger;
 
     public TelegramBot(String token) {
@@ -79,7 +81,6 @@ public class TelegramBot {
     public Map<ThreadId, Future<?>> getThreads() {
         return registryThread.getThreads();
     }
-
     public Map<Long, BotUser> getUsers() {
         return registryUser.getUsers();
     }
