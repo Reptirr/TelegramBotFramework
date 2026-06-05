@@ -25,14 +25,14 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     RegistryThread threadRegistry;
     RegistryUser registryUser;
 
-    TelegramClient tgClient;
+    Messenger messenger;
     CommandExecutor commandExecutor;
     DialogManager dialogManager;
 
 
-    public UpdateHandler(RegistryCommand commandRegistry, TelegramClient tgClient, CommandExecutor executor, RegistryThread registryThread, RegistryUser registryUser) {
+    public UpdateHandler(RegistryCommand commandRegistry, Messenger messenger, CommandExecutor executor, RegistryThread registryThread, RegistryUser registryUser) {
         this.commandRegistry = commandRegistry;
-        this.tgClient = tgClient;
+        this.messenger = messenger;
         this.commandExecutor = executor;
         this.threadRegistry = registryThread;
         this.registryUser = registryUser;
@@ -43,7 +43,8 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     @SneakyThrows
     @Override
     public void consume(Update update) {
-        Context ctx = new Context(new TelegramContext(update, new Messenger(tgClient)), dialogManager, registryUser);
+        Context ctx = new Context(new TelegramContext(update, messenger), dialogManager, registryUser);
+
         registryUser.addBotUserIfNotRegistered(new BotUser(ctx.user())); // добавление юзера в регистр
         BotUser currentUser = registryUser.getBotUser(ctx.user().getId());
 

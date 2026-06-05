@@ -33,19 +33,21 @@ public class TelegramBot {
     private final TimeoutService timeoutService = new TimeoutService(10, registryUser);
     private final TimeoutThreadManager timeoutThreadManager = new TimeoutThreadManager(timeoutService, 1);
 
+    private final Messenger messenger;
+
     public TelegramBot(String token) {
         this.token = token;
         this.registryCommand = new RegistryCommand();
         registryThread = new RegistryThread();
+        messenger = new Messenger(new OkHttpTelegramClient(token));
     }
 
     public void start() {
         if (!isStarted) {
 
             app = new TelegramBotsLongPollingApplication();
-            TelegramClient tgClient = new OkHttpTelegramClient(token);
             CommandExecutor executor = new CommandExecutor(registryCommand, registryThread);
-            UpdateHandler updateHandler = new UpdateHandler(registryCommand, tgClient, executor, registryThread, registryUser);
+            UpdateHandler updateHandler = new UpdateHandler(registryCommand, messenger, executor, registryThread, registryUser);
 
             timeoutThreadManager.startChecking();
 
