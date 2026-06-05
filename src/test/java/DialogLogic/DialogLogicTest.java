@@ -1,18 +1,17 @@
 package DialogLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
-import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.TelegramContext;
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.BaseDialog;
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogManager;
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogStatus;
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.UserDialogState;
-import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.BotUser;
-import com.Reptir.TelegramJavaBot.Framework.Core.Registries.RegistryUser;
-import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.Messenger;
+import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.ContextLogic.TelegramContext;
+import com.Reptir.TelegramJavaBot.Framework.DialogLogic.BaseDialog;
+import com.Reptir.TelegramJavaBot.Framework.DialogLogic.DialogManager;
+import com.Reptir.TelegramJavaBot.Framework.DialogLogic.DialogStatus;
+import com.Reptir.TelegramJavaBot.Framework.DialogLogic.UserDialogState;
+import com.Reptir.TelegramJavaBot.Framework.Telegram.BotUser;
+import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryUser;
+import com.Reptir.TelegramJavaBot.Framework.Telegram.Messenger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.concurrent.atomic.AtomicBoolean;

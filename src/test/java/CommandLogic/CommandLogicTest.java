@@ -1,8 +1,8 @@
 package CommandLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
-import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.TelegramContext;
-import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.UpdateType;
+import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.ContextLogic.TelegramContext;
+import com.Reptir.TelegramJavaBot.Framework.ContextLogic.UpdateType;
 import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;

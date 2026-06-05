@@ -30,7 +30,7 @@ Get your bot token from `@BotFather`.
 
 ```java
 import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.CommandTrigger;
-import com.Reptir.TelegramJavaBot.Framework.Core.Telegram.TelegramBot;
+import Telegram.com.Reptir.TelegramJavaBot.Framework.TelegramBot;
 
 import java.util.EnumSet;
 
@@ -62,11 +62,12 @@ Implement `BaseCommand`:
 
 ```java
 
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
+import com.Reptir.TelegramJavaBot.Framework.CommandLogic.BaseCommand;
+import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
 
 public class StartCommand implements BaseCommand {
     @Override
-    public void execute(com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context ctx, String[] args) {
+    public void execute(ContextLogic.com.Reptir.TelegramJavaBot.Framework.Context ctx, String[] args) {
         // example logic
         ctx.messenger().sendText(ctx.getMessage().getChat().getId(), "You wrote: " + ctx.getmessage().getText());
     }
@@ -82,13 +83,14 @@ Implement `BaseDialog`:
 
 ```java
 
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.UserDialogState;
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogStatus;
+import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
+import com.Reptir.TelegramJavaBot.Framework.DialogLogic.UserDialogState;
+import DialogLogic.com.Reptir.TelegramJavaBot.Framework.DialogStatus;
 
 public class MyDialog implements BaseDialog {
 
     @Override
-    public DialogStatus nextStep(com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context ctx, UserDialogState dialogState) {
+    public DialogStatus nextStep(ContextLogic.com.Reptir.TelegramJavaBot.Framework.Context ctx, UserDialogState dialogState) {
         return switch (dialogState.currentStep) {
             case 0 -> {
                 ctx.messenger().sendText(ctx.getMessage().getChatId(), "You are on step 1");
@@ -108,8 +110,8 @@ public class MyDialog implements BaseDialog {
 Start dialog inside a command:
 
 ```java
-import com.Reptir.TelegramJavaBot.Framework.Core.ContextLogic.Context;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
+import ContextLogic.com.Reptir.TelegramJavaBot.Framework.Context;
+import CommandLogic.com.Reptir.TelegramJavaBot.Framework.BaseCommand;
 
 class DialogStartCommand implements BaseCommand {
     void execute(Context ctx, String[] args) {
