@@ -8,7 +8,7 @@ This framework was designed to avoid rewriting callback handling, dialog state m
 
 ## Features
 
-* Command system (user input and internal callback commands)
+* Command system (Trigger -> BaseCommand)
 * Dialog system with step-based state management
 * Automatic dialog timeout handling
 * Inline keyboard builder
@@ -26,15 +26,15 @@ This framework was designed to avoid rewriting callback handling, dialog state m
 
 Get your bot token from `@BotFather`.
 
-### 2. Initialize the bot
+### 2. Initialize the bot and add command
 
 ```java
 public class Main {
     public static void main(String[] args) {
-        Bot bot = BotBuilder.builder("YOUR_TOKEN")
-                .addCommand("/start", new StartCommand())
-                .build();
+        TelegramBot bot = new TelegramBot("YOUR_TOKEN");
 
+        bot.addCommand(Triggers.command("/start"), ctx -> ctx.tgContext().messenger().sendText(ctx.chatId(), "start"));
+        
         bot.start();
     }
 }
@@ -47,25 +47,14 @@ public class Main {
 Implement `BaseCommand`:
 
 ```java
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
-
 public class StartCommand implements BaseCommand {
-    @Override
-    public boolean isForUserInput() {
-        return true;
-    }
-
     @Override
     public void execute(Context ctx, String[] args) {
         // example logic
-        ctx.getMessenger().sendText(ctx.getMessage().getChat().getId(), "You wrote: " + ctx.getMessage().getText());
+        ctx.tgContext().messenger().sendText(ctx.getMessage().getChat().getId(), "hi");
     }
 }
 ```
-
-* `isForUserInput()` -> true if command should be triggered by message text
-* false if it should only be triggered internally (e.g., callback)
 
 ---
 
@@ -75,21 +64,18 @@ Dialog provides a nextStep() method executed on each user message during an acti
 Implement `BaseDialog`:
 
 ```java
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.UserDialogState;
-import com.Reptir.TelegramJavaBot.Framework.Core.DialogLogic.DialogStatus;
 
 public class MyDialog implements BaseDialog {
 
     @Override
-    public DialogStatus nextStep(Context ctx, UserDialogState dialogState) {
+    public DialogStatus nextStep(ContextLogic.com.Reptir.TelegramJavaBot.Framework.Context ctx, UserDialogState dialogState) {
         return switch (dialogState.currentStep) {
             case 0 -> {
-                ctx.getMessenger().sendText(ctx.getMessage().getChatId(), "You are on step 1");
+                ctx.messenger().sendText(ctx.getMessage().getChatId(), "You are on step 1");
                 yield DialogStatus.CONTINUE;
             }
             case 1 -> {
-                ctx.getMessenger().sendText(ctx.getMessage().getChatId(), "You are on step 2. Finish dialog");
+                ctx.messenger().sendText(ctx.getMessage().getChatId(), "You are on step 2. Finish dialog");
                 yield DialogStatus.FINISHED;
             }
             default -> DialogStatus.FINISHED;
@@ -102,13 +88,12 @@ public class MyDialog implements BaseDialog {
 Start dialog inside a command:
 
 ```java
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.Context;
-import com.Reptir.TelegramJavaBot.Framework.Core.CommandLogic.BaseCommand;
+import ContextLogic.com.Reptir.TelegramJavaBot.Framework.Context;
+import CommandLogic.com.Reptir.TelegramJavaBot.Framework.BaseCommand;
 
 class DialogStartCommand implements BaseCommand {
-    void execute(Context ctx, String[] args) {
-        if (ctx.getCallback() != null)
-            ctx.getDialogManager().startDialog(new MyDialog(), ctx.getMessage().getFrom().getId(), ctx);
+    void execute(Context ctx) {
+        ctx.dialogManager().startDialog(new MyDialog(), ctx.user().getId(), ctx);
     }
 }
 ```
