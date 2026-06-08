@@ -5,7 +5,7 @@
 
 	<groupId>com.Reptir</groupId>
 	<artifactId>TelegramJavaBotFramework</artifactId>
-	<version>1.0.4b</version>
+	<version>1.5</version>
 	<name>TelegramJavaBotFramework</name>
 	<description>Telegram bot - wrapper with base logic</description>
 
