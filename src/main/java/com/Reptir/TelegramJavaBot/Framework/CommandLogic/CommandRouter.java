@@ -18,8 +18,8 @@ public class CommandRouter {
 
     public Set<BaseCommand> getMatched(Context ctx) {
         Set<BaseCommand> resultCommands = new HashSet<>();
-        for (Map.Entry<Trigger, CommandEntry> entry : commands.getEntrySet()) {
-            if (entry.getKey().match(ctx)) resultCommands.add(entry.getValue().command());
+        for (Map.Entry<Trigger, BaseCommand> entry : commands.getEntrySet()) {
+            if (entry.getKey().match(ctx)) resultCommands.add(entry.getValue());
         }
 
         return resultCommands;

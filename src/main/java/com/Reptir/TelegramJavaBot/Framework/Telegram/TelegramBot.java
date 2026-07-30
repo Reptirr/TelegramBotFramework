@@ -1,7 +1,6 @@
 package com.Reptir.TelegramJavaBot.Framework.Telegram;
 
 import com.Reptir.TelegramJavaBot.Framework.CommandLogic.BaseCommand;
-import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandEntry;
 import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandExecutor;
 import com.Reptir.TelegramJavaBot.Framework.Handlers.UpdateHandler;
 import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryCommand;
@@ -79,6 +78,6 @@ public class TelegramBot {
     }
 
     public void addCommand(Trigger trigger, BaseCommand command) {
-        registryCommand.register(trigger, new CommandEntry(command));
+        registryCommand.register(trigger, command);
     }
 }
