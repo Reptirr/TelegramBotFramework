@@ -1,6 +1,3 @@
-jdk:
-  - openjdk-22
-
 before_install:
-  - java -version
-  - mvn -version
+  - sdk install java 22-open
+  - sdk use java 22-open
