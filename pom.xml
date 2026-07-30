@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.Reptir</groupId>
-	<artifactId>TelegramJavaBotFramework</artifactId>
-	<version>1.5</version>
-	<name>TelegramJavaBotFramework</name>
-	<description>Telegram bot - wrapper with base logic</description>
+	<groupId>dev.Reptir</groupId>
+	<artifactId>tafabo-core</artifactId>
+	<version>1.7</version>
+	<name>Tafabo Core</name>
+	<description>Core framework for event-driven bot development</description>
 
 	<url/>
 	<licenses>
@@ -30,20 +30,6 @@
 
 
 	<dependencies>
-		<!-- основной модуль для long polling, содержащий LongPollingSingleThreadUpdateConsumer -->
-		<dependency>
-			<groupId>org.telegram</groupId>
-			<artifactId>telegrambots-longpolling</artifactId>
-			<version>9.4.0</version>
-		</dependency>
-
-		<!-- клиент для выполнения запросов (SendMessage и прочие методы API) -->
-		<dependency>
-			<groupId>org.telegram</groupId>
-			<artifactId>telegrambots-client</artifactId>
-			<version>9.4.0</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -56,20 +42,6 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.5.25</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>5.10.2</version>
-			<scope>test</scope>
-		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.mockito</groupId>-->
-<!--			<artifactId>mockito-core</artifactId>-->
-<!--			<version>5.12.0</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
-
 	</dependencies>
 
 
