@@ -1,4 +1,4 @@
-package com.Reptir.Tafabo.Framework.ContextLogic;
+package com.Reptir.Tafabo.Framework.dto;
 
 import com.Reptir.Tafabo.Framework.Registries.RegistryUser;
 

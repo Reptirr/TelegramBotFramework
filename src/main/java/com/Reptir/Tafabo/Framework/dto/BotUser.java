@@ -1,4 +1,4 @@
-package com.Reptir.Tafabo.Framework.AdapterLogic;
+package com.Reptir.Tafabo.Framework.dto;
 
 
 public class BotUser {

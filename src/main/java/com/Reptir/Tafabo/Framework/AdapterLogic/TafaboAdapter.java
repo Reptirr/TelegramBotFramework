@@ -8,6 +8,7 @@ import com.Reptir.Tafabo.Framework.Registries.RegistryThread;
 import com.Reptir.Tafabo.Framework.Registries.RegistryUser;
 import com.Reptir.Tafabo.Framework.ThreadLogic.ThreadId;
 import com.Reptir.Tafabo.Framework.TriggerLogic.Trigger;
+import com.Reptir.Tafabo.Framework.dto.BotUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;

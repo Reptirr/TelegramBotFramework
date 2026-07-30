@@ -3,11 +3,11 @@ package com.Reptir.Tafabo.Framework.Handlers;
 import com.Reptir.Tafabo.Framework.CommandLogic.BaseCommand;
 import com.Reptir.Tafabo.Framework.CommandLogic.CommandExecutor;
 import com.Reptir.Tafabo.Framework.CommandLogic.CommandRouter;
-import com.Reptir.Tafabo.Framework.ContextLogic.Context;
 import com.Reptir.Tafabo.Framework.Registries.RegistryCommand;
 import com.Reptir.Tafabo.Framework.Registries.RegistryThread;
 import com.Reptir.Tafabo.Framework.Registries.RegistryUser;
-import com.Reptir.Tafabo.Framework.AdapterLogic.BotUser;
+import com.Reptir.Tafabo.Framework.dto.BotUser;
+import com.Reptir.Tafabo.Framework.dto.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
