@@ -11,26 +11,6 @@ public record Context(
         RegistryUser registryUser
 ) {
 
-    public UpdateType updateType() {
-        if (tgContext == null || tgContext.update() == null) {
-            return UpdateType.UNKNOWN;
-        }
-
-        if (tgContext.update().hasMessage()) {
-            return UpdateType.USER_INPUT;
-        }
-
-        if (tgContext.update().hasCallbackQuery()) {
-            return UpdateType.CALLBACK;
-        }
-
-        if (tgContext.update().hasEditedMessage()) {
-            return UpdateType.MESSAGE_EDITED;
-        }
-
-        return UpdateType.UNKNOWN;
-    }
-
     public ChatType chatType() {
         Chat chat = chat();
 

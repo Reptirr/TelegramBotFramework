@@ -1,7 +1,6 @@
 package com.Reptir.TelegramJavaBot.Framework.TriggerLogic;
 
 import com.Reptir.TelegramJavaBot.Framework.ContextLogic.ChatType;
-import com.Reptir.TelegramJavaBot.Framework.ContextLogic.UpdateType;
 
 public class Triggers {
 
@@ -70,9 +69,6 @@ public class Triggers {
         return ctx -> ctx.chatType() == type;
     }
 
-    public static Trigger updateType(UpdateType type) {
-        return ctx -> ctx.updateType() == type;
-    }
 
     // =========
     // Message work
