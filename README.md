@@ -1,67 +1,150 @@
-# TelegramJavaBot Framework
+Tafabo Core is a lightweight, event-driven Java framework for building bots.
 
-A lightweight Java framework built on top of the Telegram Bots API for creating structured, dialog-driven Telegram bots.
-
-This framework was designed to avoid rewriting callback handling, dialog state management, and command routing logic for every new bot. It provides a clean architecture with separation of concerns and extensible components.
+It is **platform-independent** and communicates through adapters that connect any messaging system.
 
 ---
 
 ## Features
 
-* Command system (Trigger -> BaseCommand)
-* Dialog system with step-based state management
-* Automatic dialog timeout handling
-* Inline keyboard builder
-* Centralized registries (users, commands, dialogs, threads)
-* Virtual thread execution (Project Loom)
-* Builder-style bot initialization
-* Clear separation between Core and Realizations
-
+* Event-driven architecture
+* Platform-agnostic design
+* Trigger-based command routing
+* Virtual-thread execution (Java 22+)
+* Adapter-based extensibility
+* Minimal and lightweight core
 
 ---
 
-## Quick Start
+## Core Concepts
 
-### 1. Create a bot in Telegram
+* **Update** — incoming event from a messaging platform
+* **Messenger** — abstraction for sending messages
+* **Command** — unit of business logic
+* **Trigger** — condition that determines command execution
+* **Context** — runtime data passed to commands
+* **Adapter** — bridge between a platform and Tafabo Core
 
-Get your bot token from `@BotFather`.
+---
 
-### 2. Initialize the bot and add command
+## How it works
 
-```java
-public class Main {
-    public static void main(String[] args) {
-        TelegramBot bot = new TelegramBot("YOUR_TOKEN");
+1. A platform receives an update
+2. The adapter forwards it to the core
+3. The router matches commands using triggers
+4. Matching commands are executed in virtual threads
+5. Each command receives a `Context` with runtime data
 
-        bot.addCommand(Triggers.command("/start"), ctx -> ctx.tgContext().messenger().sendText(ctx.chatId(), "start"));
-        
-        bot.start();
+---
+
+## Example
+
+```Java
+//
+// Code from tafabo-telegram
+//
+
+public class TelegramMessenger {
+    private final OkHttpTelegramClient tgClient;
+
+    public TelegramMessenger(String token) {
+        this.tgClient = new OkHttpTelegramClient(token);
+    }
+
+
+    public void sendText(long id, String text) {
+        try {
+            SendMessage sendMessage = new SendMessage(String.valueOf(id), text);
+            tgClient.execute(sendMessage);
+        } catch (TelegramApiException e) {
+            log.error("Send text to '{}' failed: {}", id, e.toString());
+        }
     }
 }
-```
 
----
 
-## Creating a Command
 
-Implement `BaseCommand`:
+public static class TelegramBot extends TafaboAdapter<Update, TelegramMessenger> {
 
-```java
-public class StartCommand implements BaseCommand {
+    private TelegramBotsLongPollingApplication app;
+    private final String token;
+
+    public TelegramAdapter(String token) {
+        super(new TelegramMessenger(token));
+        this.token = token;
+    }
+
+    private void onTelegramUpdate(List<Update> updates) {
+        updates.forEach(this::onUpdate);
+    }
+
     @Override
-    public void execute(Context ctx, String[] args) {
-        // example logic
-        ctx.tgContext().messenger().sendText(ctx.getMessage().getChat().getId(), "hi");
+    protected void onStart() throws TelegramApiException {
+        app = new TelegramBotsLongPollingApplication();
+        app.registerBot(token, this::onTelegramUpdate);
     }
+
+    @Override
+    protected void onStop() throws TelegramApiException {
+        app.stop();
+    }
+}
+```
+
+Use it: 
+
+```Java
+public static void main(String[] args) {
+    var bot = new TelegramBot("YOUR_TOKEN");
+
+    bot.addCommand(
+            update -> update.hasMessage() && update.getMessage().hasText(),
+            ctx -> ctx.messenger().sendText(ctx.update().getMessage().getChatId(), "you wrote: " + ctx.update().getMessage().getText())
+    );
 }
 ```
 
 ---
 
-##  Notes
+[//]: # ()
+[//]: # (## Installation)
 
-* In-memory storage (no persistence by default)
-* Suitable for small to medium bots
+[//]: # ()
+[//]: # (```xml)
+
+[//]: # (<dependency>)
+
+[//]: # (    <groupId>dev.Reptir</groupId>)
+
+[//]: # (    <artifactId>tafabo-core</artifactId>)
+
+[//]: # (    <version>1.7</version>)
+
+[//]: # (</dependency>)
+
+[//]: # (```)
+
+
+
+## Requirements
+
+* Java 22 or higher
+* Maven
 
 ---
-<p align="center">Made by Reptir</p>
+
+## Notes
+
+* Concurrency is handled using Java Virtual Threads
+* No built-in persistence layer is provided
+* The framework is extended exclusively via adapters
+* The core is intentionally minimal and unopinionated
+
+---
+
+## License
+
+MIT
+
+---
+
+<p align="center">Made by Reptirr</p>
