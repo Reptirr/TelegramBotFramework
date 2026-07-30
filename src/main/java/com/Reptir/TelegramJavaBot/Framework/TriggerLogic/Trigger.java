@@ -1,7 +1,8 @@
 package com.Reptir.TelegramJavaBot.Framework.TriggerLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
+
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 public interface Trigger {
-    boolean match(Context ctx);
+    boolean match(Update ctx);
 }

@@ -3,6 +3,7 @@ package com.Reptir.TelegramJavaBot.Framework.CommandLogic;
 import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryCommand;
 import com.Reptir.TelegramJavaBot.Framework.TriggerLogic.Trigger;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -16,10 +17,10 @@ public class CommandRouter {
     }
 
 
-    public Set<BaseCommand> getMatched(Context ctx) {
+    public Set<BaseCommand> getMatched(Update update) {
         Set<BaseCommand> resultCommands = new HashSet<>();
         for (Map.Entry<Trigger, BaseCommand> entry : commands.getEntrySet()) {
-            if (entry.getKey().match(ctx)) resultCommands.add(entry.getValue());
+            if (entry.getKey().match(update)) resultCommands.add(entry.getValue());
         }
 
         return resultCommands;

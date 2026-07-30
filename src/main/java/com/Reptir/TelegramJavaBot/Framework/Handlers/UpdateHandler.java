@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.generics.TelegramClient;
 import lombok.SneakyThrows;
 
 import java.util.Set;
@@ -44,7 +43,7 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
 
         registryUser.addBotUserIfNotRegistered(new BotUser(ctx.user())); // добавление юзера в регистр
 
-        Set<BaseCommand> matchedCommands = router.getMatched(ctx);
+        Set<BaseCommand> matchedCommands = router.getMatched(update);
         commandExecutor.executeAll(matchedCommands, ctx);
     }
 }
