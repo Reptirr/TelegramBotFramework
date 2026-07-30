@@ -1,34 +1,22 @@
 package com.Reptir.TelegramJavaBot.Framework.Registries;
 
-import com.Reptir.TelegramJavaBot.Framework.Telegram.BotUser;
+import com.Reptir.TelegramJavaBot.Framework.TafaboAdapter.BotUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 // регистр состояний пользователя
 public class RegistryUser {
     private final Logger logger = LoggerFactory.getLogger(RegistryUser.class);
-    private final Map<Long, BotUser> users = new ConcurrentHashMap<>();
+    private final Set<BotUser> users = new HashSet<>();
 
-    public BotUser getBotUser(Long id) {
-        if (users.containsKey(id)) return users.get(id);
-        return null;
-    }
-
-    public Map<Long, BotUser> getUsers() {
+    public Set<BotUser> getUsers() {
         return users;
     }
 
     public void addBotUserIfNotRegistered(BotUser botUser) {
-        if (!users.containsKey(botUser.getId())) {
-            logger.info("Registered new BotUser '@{}' with id '{}'", botUser.getUser().getUserName(), botUser.getId());
-            users.put(botUser.getId(), botUser);
-        }
-    }
-
-    public void removeBotUser(Long id) {
-        users.remove(id);
+        users.add(botUser);
     }
 }

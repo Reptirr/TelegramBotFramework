@@ -5,14 +5,17 @@ import com.Reptir.TelegramJavaBot.Framework.TriggerLogic.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 
-public class RegistryCommand {
-    private final Map<Trigger, BaseCommand> commands = new HashMap<>();
+public class RegistryCommand<U, M> {
+    private final Map<Trigger<U>, BaseCommand<U, M>> commands = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(RegistryCommand.class);
 
-    public void register(Trigger trigger, BaseCommand entry) {
+    public void register(Trigger<U> trigger, BaseCommand<U, M> entry) {
         if (Objects.equals(commands.get(trigger), entry)) {
             logger.warn("Entry trigger - command already exists. Skipping");
             return;
@@ -21,7 +24,7 @@ public class RegistryCommand {
         commands.put(trigger, entry);
     }
 
-    public Set<Map.Entry<Trigger, BaseCommand>> getEntrySet() {
+    public Set<Map.Entry<Trigger<U>, BaseCommand<U, M>>> getEntrySet() {
         return commands.entrySet();
     }
 

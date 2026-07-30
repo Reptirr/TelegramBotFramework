@@ -8,23 +8,23 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
-public class CommandExecutor {
+public class CommandExecutor<U, M> {
     private final Logger logger = LoggerFactory.getLogger(CommandExecutor.class);
-    private final RegistryCommand registryCommand;
+    private final RegistryCommand<U, M> registryCommand;
     private final RegistryThread registryThread;
 
-    public CommandExecutor(RegistryCommand registryCommand, RegistryThread registryThread) {
+    public CommandExecutor(RegistryCommand<U, M> registryCommand, RegistryThread registryThread) {
         this.registryCommand = registryCommand;
         this.registryThread = registryThread;
     }
 
-    public void executeAll(Set<BaseCommand> commands, Context ctx) {
+    public void executeAll(Set<BaseCommand<U, M>> commands, Context<U, M> ctx) {
         if (ctx == null) {
             logger.warn("Detected null ctx, skipping");
             return;
         }
 
-        for (BaseCommand command : commands) {
+        for (BaseCommand<U, M> command : commands) {
             registryThread.createThread(() -> command.execute(ctx));
         }
     }
