@@ -1,6 +1,6 @@
-package com.Reptir.TelegramJavaBot.Framework.Registries;
+package com.Reptir.Tafabo.Framework.Registries;
 
-import com.Reptir.TelegramJavaBot.Framework.ThreadLogic.ThreadId;
+import com.Reptir.Tafabo.Framework.ThreadLogic.ThreadId;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

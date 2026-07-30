@@ -1,19 +1,19 @@
-package com.Reptir.TelegramJavaBot.Framework.TriggerLogic;
+package com.Reptir.Tafabo.Framework.TriggerLogic;
 
 public class Triggers {
     public static Trigger and(Trigger... triggers) {
-        return ctx -> {
+        return update -> {
             for (Trigger trigger : triggers) {
-                if (!trigger.match(ctx)) return false;
+                if (!trigger.match(update)) return false;
             }
             return true;
         };
     }
 
     public static Trigger or(Trigger... triggers) {
-        return ctx -> {
+        return update -> {
             for (Trigger trigger : triggers) {
-                if (trigger.match(ctx)) return true;
+                if (trigger.match(update)) return true;
             }
             return false;
         };
