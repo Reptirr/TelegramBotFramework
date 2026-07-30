@@ -8,8 +8,6 @@ import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryCommand;
 import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryThread;
 import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryUser;
 import com.Reptir.TelegramJavaBot.Framework.ThreadLogic.ThreadId;
-import com.Reptir.TelegramJavaBot.Framework.TimeoutLogic.TimeoutService;
-import com.Reptir.TelegramJavaBot.Framework.TimeoutLogic.TimeoutThreadManager;
 import com.Reptir.TelegramJavaBot.Framework.TriggerLogic.Trigger;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -17,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -31,8 +28,6 @@ public class TelegramBot {
     private final RegistryThread registryThread;
     private TelegramBotsLongPollingApplication app;
     private final RegistryUser registryUser = new RegistryUser();
-    private final TimeoutService timeoutService = new TimeoutService(10, registryUser);
-    private final TimeoutThreadManager timeoutThreadManager = new TimeoutThreadManager(timeoutService, 1);
 
     @Getter
     private final Messenger messenger;
@@ -51,7 +46,6 @@ public class TelegramBot {
             CommandExecutor executor = new CommandExecutor(registryCommand, registryThread);
             UpdateHandler updateHandler = new UpdateHandler(registryCommand, messenger, executor, registryThread, registryUser);
 
-            timeoutThreadManager.startChecking();
 
             try {
                 app.registerBot(token, updateHandler);
@@ -70,7 +64,6 @@ public class TelegramBot {
                 app.close();
                 isStarted = false;
                 registryThread.shutdown();
-                timeoutThreadManager.stopChecking();
             } catch (Exception e) {
                 logger.error("Failed to stop bot", e);
             }
@@ -87,9 +80,5 @@ public class TelegramBot {
 
     public void addCommand(Trigger trigger, BaseCommand command) {
         registryCommand.register(trigger, new CommandEntry(command));
-    }
-
-    public void setTimeoutDialog(short seconds) {
-        timeoutService.setTimeout(seconds);
     }
 }

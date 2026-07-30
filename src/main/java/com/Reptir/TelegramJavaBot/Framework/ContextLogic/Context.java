@@ -1,6 +1,5 @@
 package com.Reptir.TelegramJavaBot.Framework.ContextLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryUser;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -9,7 +8,6 @@ import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 public record Context(
         TelegramContext tgContext,
-        DialogManager dialogManager,
         RegistryUser registryUser
 ) {
 

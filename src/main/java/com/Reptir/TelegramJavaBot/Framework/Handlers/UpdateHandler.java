@@ -4,7 +4,6 @@ import com.Reptir.TelegramJavaBot.Framework.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandExecutor;
 import com.Reptir.TelegramJavaBot.Framework.ContextLogic.TelegramContext;
-import com.Reptir.TelegramJavaBot.Framework.DialogLogic.DialogManager;
 import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryCommand;
 import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryThread;
 import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryUser;
@@ -27,7 +26,6 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
 
     Messenger messenger;
     CommandExecutor commandExecutor;
-    DialogManager dialogManager;
 
 
     public UpdateHandler(RegistryCommand commandRegistry, Messenger messenger, CommandExecutor executor, RegistryThread registryThread, RegistryUser registryUser) {
@@ -36,22 +34,14 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
         this.commandExecutor = executor;
         this.threadRegistry = registryThread;
         this.registryUser = registryUser;
-
-        this.dialogManager = new DialogManager(registryUser);
     }
 
     @SneakyThrows
     @Override
     public void consume(Update update) {
-        Context ctx = new Context(new TelegramContext(update, messenger), dialogManager, registryUser);
+        Context ctx = new Context(new TelegramContext(update, messenger), registryUser);
 
         registryUser.addBotUserIfNotRegistered(new BotUser(ctx.user())); // добавление юзера в регистр
-        BotUser currentUser = registryUser.getBotUser(ctx.user().getId());
-
-        if (currentUser.getDialogState() != null) {          // исполнение диалога
-            dialogManager.executeDialogIfExists(currentUser.getId(), ctx);
-            return;
-        }
 
         Set<BaseCommand> matchedCommands = commandRegistry.getMatched(ctx);
         commandExecutor.executeAll(matchedCommands, ctx);
