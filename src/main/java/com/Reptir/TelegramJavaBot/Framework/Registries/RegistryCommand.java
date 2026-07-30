@@ -1,8 +1,6 @@
 package com.Reptir.TelegramJavaBot.Framework.Registries;
 
-import com.Reptir.TelegramJavaBot.Framework.CommandLogic.BaseCommand;
 import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandEntry;
-import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.TriggerLogic.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +21,8 @@ public class RegistryCommand {
         commands.put(trigger, entry);
     }
 
-    public Set<BaseCommand> getMatched(Context ctx) {
-        Set<BaseCommand> resultCommands = new HashSet<>();
-        for (Map.Entry<Trigger, CommandEntry> entry : commands.entrySet()) {
-            if (entry.getKey().match(ctx)) resultCommands.add(entry.getValue().command());
-        }
-
-        return resultCommands;
+    public Set<Map.Entry<Trigger, CommandEntry>> getEntrySet() {
+        return commands.entrySet();
     }
 
 }

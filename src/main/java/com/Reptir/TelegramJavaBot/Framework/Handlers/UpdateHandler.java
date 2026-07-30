@@ -1,6 +1,7 @@
 package com.Reptir.TelegramJavaBot.Framework.Handlers;
 
 import com.Reptir.TelegramJavaBot.Framework.CommandLogic.BaseCommand;
+import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandRouter;
 import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
 import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandExecutor;
 import com.Reptir.TelegramJavaBot.Framework.ContextLogic.TelegramContext;
@@ -20,16 +21,16 @@ import java.util.Set;
 
 public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
     private final Logger logger = LoggerFactory.getLogger(UpdateHandler.class);
-    RegistryCommand commandRegistry;
+
     RegistryThread threadRegistry;
     RegistryUser registryUser;
-
+    CommandRouter router;
     Messenger messenger;
     CommandExecutor commandExecutor;
 
 
     public UpdateHandler(RegistryCommand commandRegistry, Messenger messenger, CommandExecutor executor, RegistryThread registryThread, RegistryUser registryUser) {
-        this.commandRegistry = commandRegistry;
+        this.router = new CommandRouter(commandRegistry);
         this.messenger = messenger;
         this.commandExecutor = executor;
         this.threadRegistry = registryThread;
@@ -43,7 +44,7 @@ public class UpdateHandler implements LongPollingSingleThreadUpdateConsumer {
 
         registryUser.addBotUserIfNotRegistered(new BotUser(ctx.user())); // добавление юзера в регистр
 
-        Set<BaseCommand> matchedCommands = commandRegistry.getMatched(ctx);
+        Set<BaseCommand> matchedCommands = router.getMatched(ctx);
         commandExecutor.executeAll(matchedCommands, ctx);
     }
 }
