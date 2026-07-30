@@ -58,48 +58,6 @@ public class StartCommand implements BaseCommand {
 
 ---
 
-## Creating a Dialog
-
-Dialog provides a nextStep() method executed on each user message during an active dialog.
-Implement `BaseDialog`:
-
-```java
-
-public class MyDialog implements BaseDialog {
-
-    @Override
-    public DialogStatus nextStep(ContextLogic.com.Reptir.TelegramJavaBot.Framework.Context ctx, UserDialogState dialogState) {
-        return switch (dialogState.currentStep) {
-            case 0 -> {
-                ctx.messenger().sendText(ctx.getMessage().getChatId(), "You are on step 1");
-                yield DialogStatus.CONTINUE;
-            }
-            case 1 -> {
-                ctx.messenger().sendText(ctx.getMessage().getChatId(), "You are on step 2. Finish dialog");
-                yield DialogStatus.FINISHED;
-            }
-            default -> DialogStatus.FINISHED;
-        };
-
-    }
-}
-```
-
-Start dialog inside a command:
-
-```java
-import ContextLogic.com.Reptir.TelegramJavaBot.Framework.Context;
-import CommandLogic.com.Reptir.TelegramJavaBot.Framework.BaseCommand;
-
-class DialogStartCommand implements BaseCommand {
-    void execute(Context ctx) {
-        ctx.dialogManager().startDialog(new MyDialog(), ctx.user().getId(), ctx);
-    }
-}
-```
-
----
-
 ##  Notes
 
 * In-memory storage (no persistence by default)
