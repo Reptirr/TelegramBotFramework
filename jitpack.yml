@@ -1,2 +1,6 @@
 jdk:
   - openjdk22
+
+before_install:
+  - java -version
+  - mvn -version
