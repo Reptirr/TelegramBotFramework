@@ -11,7 +11,6 @@ import com.Reptir.Tafabo.Framework.TriggerLogic.Trigger;
 import com.Reptir.Tafabo.Framework.dto.BotUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Map;
 import java.util.Set;
@@ -32,8 +31,8 @@ public abstract class TafaboAdapter<U, M> {
         this.messenger = messenger;
     }
 
-    protected abstract void onStart() throws TelegramApiException;
-    protected abstract void onStop() throws TelegramApiException;
+    protected abstract void onStart();
+    protected abstract void onStop();
 
     protected void onUpdate(U update) {
         tafaboApplication.consumeUpdate(update);
