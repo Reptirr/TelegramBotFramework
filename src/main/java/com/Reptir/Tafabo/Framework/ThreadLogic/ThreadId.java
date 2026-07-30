@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Framework.ThreadLogic;
+package com.Reptir.Tafabo.Framework.ThreadLogic;
 
 import java.util.UUID;
 

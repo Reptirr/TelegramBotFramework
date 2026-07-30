@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Framework.TriggerLogic;
+package com.Reptir.Tafabo.Framework.TriggerLogic;
 
 public class Triggers {
     public static Trigger and(Trigger... triggers) {

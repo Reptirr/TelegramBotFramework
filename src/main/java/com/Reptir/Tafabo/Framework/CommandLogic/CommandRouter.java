@@ -1,7 +1,7 @@
-package com.Reptir.TelegramJavaBot.Framework.CommandLogic;
+package com.Reptir.Tafabo.Framework.CommandLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryCommand;
-import com.Reptir.TelegramJavaBot.Framework.TriggerLogic.Trigger;
+import com.Reptir.Tafabo.Framework.Registries.RegistryCommand;
+import com.Reptir.Tafabo.Framework.TriggerLogic.Trigger;
 
 import java.util.HashSet;
 import java.util.Map;

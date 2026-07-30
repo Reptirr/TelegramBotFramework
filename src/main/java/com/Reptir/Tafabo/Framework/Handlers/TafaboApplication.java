@@ -1,13 +1,13 @@
-package com.Reptir.TelegramJavaBot.Framework.Handlers;
+package com.Reptir.Tafabo.Framework.Handlers;
 
-import com.Reptir.TelegramJavaBot.Framework.CommandLogic.BaseCommand;
-import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandExecutor;
-import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandRouter;
-import com.Reptir.TelegramJavaBot.Framework.ContextLogic.Context;
-import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryCommand;
-import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryThread;
-import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryUser;
-import com.Reptir.TelegramJavaBot.Framework.TafaboAdapter.BotUser;
+import com.Reptir.Tafabo.Framework.CommandLogic.BaseCommand;
+import com.Reptir.Tafabo.Framework.CommandLogic.CommandExecutor;
+import com.Reptir.Tafabo.Framework.CommandLogic.CommandRouter;
+import com.Reptir.Tafabo.Framework.ContextLogic.Context;
+import com.Reptir.Tafabo.Framework.Registries.RegistryCommand;
+import com.Reptir.Tafabo.Framework.Registries.RegistryThread;
+import com.Reptir.Tafabo.Framework.Registries.RegistryUser;
+import com.Reptir.Tafabo.Framework.AdapterLogic.BotUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

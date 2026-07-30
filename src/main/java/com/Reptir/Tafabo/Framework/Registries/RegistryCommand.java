@@ -1,7 +1,7 @@
-package com.Reptir.TelegramJavaBot.Framework.Registries;
+package com.Reptir.Tafabo.Framework.Registries;
 
-import com.Reptir.TelegramJavaBot.Framework.CommandLogic.BaseCommand;
-import com.Reptir.TelegramJavaBot.Framework.TriggerLogic.Trigger;
+import com.Reptir.Tafabo.Framework.CommandLogic.BaseCommand;
+import com.Reptir.Tafabo.Framework.TriggerLogic.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

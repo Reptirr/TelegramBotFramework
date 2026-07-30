@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Framework.ContextLogic;
+package com.Reptir.Tafabo.Framework.ContextLogic;
 
 public enum ChatType {
     PRIVATE,

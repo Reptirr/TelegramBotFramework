@@ -1,4 +1,4 @@
-package com.Reptir.TelegramJavaBot.Framework.TriggerLogic;
+package com.Reptir.Tafabo.Framework.TriggerLogic;
 
 public interface Trigger<U> {
     boolean match(U update);

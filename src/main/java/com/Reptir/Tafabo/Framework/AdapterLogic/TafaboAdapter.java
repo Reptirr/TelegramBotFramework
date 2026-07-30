@@ -1,13 +1,13 @@
-package com.Reptir.TelegramJavaBot.Framework.TafaboAdapter;
+package com.Reptir.Tafabo.Framework.AdapterLogic;
 
-import com.Reptir.TelegramJavaBot.Framework.CommandLogic.BaseCommand;
-import com.Reptir.TelegramJavaBot.Framework.CommandLogic.CommandExecutor;
-import com.Reptir.TelegramJavaBot.Framework.Handlers.TafaboApplication;
-import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryCommand;
-import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryThread;
-import com.Reptir.TelegramJavaBot.Framework.Registries.RegistryUser;
-import com.Reptir.TelegramJavaBot.Framework.ThreadLogic.ThreadId;
-import com.Reptir.TelegramJavaBot.Framework.TriggerLogic.Trigger;
+import com.Reptir.Tafabo.Framework.CommandLogic.BaseCommand;
+import com.Reptir.Tafabo.Framework.CommandLogic.CommandExecutor;
+import com.Reptir.Tafabo.Framework.Handlers.TafaboApplication;
+import com.Reptir.Tafabo.Framework.Registries.RegistryCommand;
+import com.Reptir.Tafabo.Framework.Registries.RegistryThread;
+import com.Reptir.Tafabo.Framework.Registries.RegistryUser;
+import com.Reptir.Tafabo.Framework.ThreadLogic.ThreadId;
+import com.Reptir.Tafabo.Framework.TriggerLogic.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-public abstract class Adapter<U, M> {
-    private final Logger logger = LoggerFactory.getLogger(Adapter.class);
+public abstract class TafaboAdapter<U, M> {
+    private final Logger logger = LoggerFactory.getLogger(TafaboAdapter.class);
     private boolean isStarted = false;
 
     private final RegistryCommand<U, M> registryCommand = new RegistryCommand<>();
@@ -27,7 +27,7 @@ public abstract class Adapter<U, M> {
 
     private final M messenger;
 
-    public Adapter(M messenger) {
+    public TafaboAdapter(M messenger) {
         this.messenger = messenger;
     }
 
