@@ -1,3 +1,7 @@
+# Tafabo Core
+
+[![](https://jitpack.io/v/Reptirr/game-of-life-automaton.svg)](https://jitpack.io/#Reptirr/game-of-life-automaton)
+
 Tafabo Core is a lightweight, event-driven Java framework for building bots.
 
 It is **platform-independent** and communicates through adapters that connect any messaging system.
