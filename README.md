@@ -1,8 +1,8 @@
 # Tafabo Core
 
-[![](https://jitpack.io/v/Reptirr/game-of-life-automaton.svg)](https://jitpack.io/#Reptirr/game-of-life-automaton)
-
-Tafabo Core is a lightweight, event-driven Java framework for building bots.
+[![](https://jitpack.io/v/Tafabo/tafabo-core.svg)](https://jitpack.io/#Tafabo/tafabo-core)
+ 
+Tafabo Core is a lightweight, event-driven Java framework for building bots and other things.
 
 It is **platform-independent** and communicates through adapters that connect any messaging system.
 
@@ -109,25 +109,31 @@ public static void main(String[] args) {
 
 ---
 
-[//]: # ()
-[//]: # (## Installation)
 
-[//]: # ()
-[//]: # (```xml)
+## Installation by Maven
 
-[//]: # (<dependency>)
+### Step 1. Use jitpack:
 
-[//]: # (    <groupId>dev.Reptir</groupId>)
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
 
-[//]: # (    <artifactId>tafabo-core</artifactId>)
+### Step 2. Import tafabo-core:
 
-[//]: # (    <version>1.7</version>)
+```xml
+<dependency>
+    <groupId>com.github.Tafabo</groupId>
+    <artifactId>tafabo-core</artifactId>
+    <version>v1.9</version>
+</dependency>
+```
 
-[//]: # (</dependency>)
-
-[//]: # (```)
-
-
+---
 
 ## Requirements
 
