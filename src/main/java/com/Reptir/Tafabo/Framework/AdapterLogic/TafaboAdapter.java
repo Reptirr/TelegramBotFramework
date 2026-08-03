@@ -35,31 +35,40 @@ public abstract class TafaboAdapter<U, M> {
     }
 
     public void start() {
-        if (!isStarted) {
+        if (isStarted) {
+            return;
+        }
 
-            try {
-                onStart();
-                isStarted = true;
-            } catch (Exception e) {
-                logger.error("Failed to start bot", e);
-            }
+        CommandExecutor<U, M> executor = new CommandExecutor<>(registryCommand, registryThread);
 
-            CommandExecutor<U, M> executor = new CommandExecutor<>(registryCommand, registryThread);
-            tafaboApplication = new TafaboApplication<>(registryCommand, messenger, executor, registryThread);
+        tafaboApplication =
+                new TafaboApplication<>(
+                        registryCommand,
+                        messenger,
+                        executor,
+                        registryThread
+                );
 
+        try {
+            onStart();
+            isStarted = true;
+        } catch (Exception e) {
+            logger.error("Failed to start bot due to onStart", e);
         }
     }
 
     public void stop() {
-        if (isStarted) {
-            try {
-                onStop();
-                isStarted = false;
-                registryThread.shutdown();
-            } catch (Exception e) {
-                logger.error("Failed to stop bot", e);
-            }
+        if (!isStarted) {
+            return;
+        }
 
+        try {
+            onStop();
+        } catch (Exception e) {
+            logger.error("Failed to stop bot due to onStop", e);
+        } finally {
+            isStarted = false;
+            registryThread.shutdown();
         }
     }
 
