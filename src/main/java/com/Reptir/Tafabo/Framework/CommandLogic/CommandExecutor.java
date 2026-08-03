@@ -1,6 +1,5 @@
 package com.Reptir.Tafabo.Framework.CommandLogic;
 
-import com.Reptir.Tafabo.Framework.Registries.RegistryCommand;
 import com.Reptir.Tafabo.Framework.Registries.RegistryThread;
 import com.Reptir.Tafabo.Framework.dto.Context;
 import org.slf4j.Logger;
@@ -10,11 +9,9 @@ import java.util.Set;
 
 public class CommandExecutor<U, M> {
     private final Logger logger = LoggerFactory.getLogger(CommandExecutor.class);
-    private final RegistryCommand<U, M> registryCommand;
     private final RegistryThread registryThread;
 
-    public CommandExecutor(RegistryCommand<U, M> registryCommand, RegistryThread registryThread) {
-        this.registryCommand = registryCommand;
+    public CommandExecutor(RegistryThread registryThread) {
         this.registryThread = registryThread;
     }
 
