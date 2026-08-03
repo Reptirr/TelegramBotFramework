@@ -63,6 +63,10 @@ public abstract class TafaboAdapter<U, M> {
         }
     }
 
+    public boolean running() {
+        return isStarted;
+    }
+
     public Map<ThreadId, Future<?>> getThreads() {
         return registryThread.getThreads();
     }
