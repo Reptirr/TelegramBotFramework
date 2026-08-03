@@ -5,15 +5,12 @@ import com.Reptir.Tafabo.Framework.CommandLogic.CommandExecutor;
 import com.Reptir.Tafabo.Framework.Handlers.TafaboApplication;
 import com.Reptir.Tafabo.Framework.Registries.RegistryCommand;
 import com.Reptir.Tafabo.Framework.Registries.RegistryThread;
-import com.Reptir.Tafabo.Framework.Registries.RegistryUser;
 import com.Reptir.Tafabo.Framework.ThreadLogic.ThreadId;
 import com.Reptir.Tafabo.Framework.TriggerLogic.Trigger;
-import com.Reptir.Tafabo.Framework.dto.BotUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Future;
 
 public abstract class TafaboAdapter<U, M> {
@@ -22,7 +19,6 @@ public abstract class TafaboAdapter<U, M> {
 
     private final RegistryCommand<U, M> registryCommand = new RegistryCommand<>();
     private final RegistryThread registryThread = new RegistryThread();
-    private final RegistryUser registryUser = new RegistryUser();
     private TafaboApplication<U, M> tafaboApplication;
 
     private final M messenger;
@@ -49,7 +45,7 @@ public abstract class TafaboAdapter<U, M> {
             }
 
             CommandExecutor<U, M> executor = new CommandExecutor<>(registryCommand, registryThread);
-            tafaboApplication = new TafaboApplication<>(registryCommand, messenger, executor, registryThread, registryUser);
+            tafaboApplication = new TafaboApplication<>(registryCommand, messenger, executor, registryThread);
 
         }
     }
@@ -69,9 +65,6 @@ public abstract class TafaboAdapter<U, M> {
 
     public Map<ThreadId, Future<?>> getThreads() {
         return registryThread.getThreads();
-    }
-    public Set<BotUser> getUsers() {
-        return registryUser.getUsers();
     }
 
     public void addCommand(Trigger<U> trigger, BaseCommand<U, M> command) {
