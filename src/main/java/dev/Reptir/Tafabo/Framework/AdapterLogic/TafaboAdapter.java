@@ -1,7 +1,6 @@
 package dev.Reptir.Tafabo.Framework.AdapterLogic;
 
 import dev.Reptir.Tafabo.Framework.CommandLogic.BaseCommand;
-import dev.Reptir.Tafabo.Framework.CommandLogic.CommandExecutor;
 import dev.Reptir.Tafabo.Framework.Handlers.TafaboApplication;
 import dev.Reptir.Tafabo.Framework.Registries.RegistryCommand;
 import dev.Reptir.Tafabo.Framework.Registries.RegistryThread;
@@ -39,13 +38,11 @@ public abstract class TafaboAdapter<U, M> {
             return;
         }
 
-        CommandExecutor<U, M> executor = new CommandExecutor<>(registryThread);
 
         tafaboApplication =
                 new TafaboApplication<>(
                         registryCommand,
                         messenger,
-                        executor,
                         registryThread
                 );
 

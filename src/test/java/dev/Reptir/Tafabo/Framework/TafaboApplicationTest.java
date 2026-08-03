@@ -1,6 +1,5 @@
 package dev.Reptir.Tafabo.Framework;
 
-import dev.Reptir.Tafabo.Framework.CommandLogic.CommandExecutor;
 import dev.Reptir.Tafabo.Framework.Handlers.TafaboApplication;
 import dev.Reptir.Tafabo.Framework.Registries.RegistryCommand;
 import dev.Reptir.Tafabo.Framework.Registries.RegistryThread;

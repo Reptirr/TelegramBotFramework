@@ -1,7 +1,6 @@
 package dev.Reptir.Tafabo.Framework;
 
 import dev.Reptir.Tafabo.Framework.CommandLogic.BaseCommand;
-import dev.Reptir.Tafabo.Framework.CommandLogic.CommandExecutor;
 import dev.Reptir.Tafabo.Framework.Registries.RegistryThread;
 import dev.Reptir.Tafabo.Framework.dto.Context;
 import org.junit.jupiter.api.Test;
