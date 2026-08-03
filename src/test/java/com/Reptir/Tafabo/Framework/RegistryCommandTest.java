@@ -5,9 +5,8 @@ import com.Reptir.Tafabo.Framework.Registries.RegistryCommand;
 import com.Reptir.Tafabo.Framework.TriggerLogic.Trigger;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class RegistryCommandTest {
 
