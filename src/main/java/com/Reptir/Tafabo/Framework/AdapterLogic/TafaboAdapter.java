@@ -39,7 +39,7 @@ public abstract class TafaboAdapter<U, M> {
             return;
         }
 
-        CommandExecutor<U, M> executor = new CommandExecutor<>(registryCommand, registryThread);
+        CommandExecutor<U, M> executor = new CommandExecutor<>(registryThread);
 
         tafaboApplication =
                 new TafaboApplication<>(
