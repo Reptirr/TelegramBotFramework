@@ -109,25 +109,31 @@ public static void main(String[] args) {
 
 ---
 
-[//]: # ()
-[//]: # (## Installation)
 
-[//]: # ()
-[//]: # (```xml)
+## Installation by Maven
 
-[//]: # (<dependency>)
+### Step 1. Use jitpack:
 
-[//]: # (    <groupId>dev.Reptir</groupId>)
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
 
-[//]: # (    <artifactId>tafabo-core</artifactId>)
+### Step 2. Import tafabo-core:
 
-[//]: # (    <version>1.7</version>)
+```xml
+<dependency>
+    <groupId>com.github.Tafabo</groupId>
+    <artifactId>tafabo-core</artifactId>
+    <version>v1.9</version>
+</dependency>
+```
 
-[//]: # (</dependency>)
-
-[//]: # (```)
-
-
+---
 
 ## Requirements
 
