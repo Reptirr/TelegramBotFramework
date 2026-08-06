@@ -50,7 +50,6 @@ public class MiddlewareTest {
     @Test
     void MiddlewareRunningTest() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(6);
-        latch.countDown();
         AtomicBoolean beforeCommandSearching = new AtomicBoolean();
         AtomicBoolean afterCommandSearching = new AtomicBoolean();
         AtomicBoolean beforeCommandsExecuting = new AtomicBoolean();
@@ -162,7 +161,6 @@ public class MiddlewareTest {
 
         adapter.send(new Object());
 
-        Thread.sleep(100);
 
         assertTrue(latch.await(2, TimeUnit.SECONDS));
 
@@ -263,8 +261,8 @@ public class MiddlewareTest {
 
         MyAdapter adapter = new MyAdapter(new Messenger());
 
-        adapter.addMiddleware(firstMiddleware);
         adapter.addMiddleware(secondMiddleware);
+        adapter.addMiddleware(firstMiddleware);
 
         adapter.start();
 
