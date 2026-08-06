@@ -9,18 +9,24 @@
 	<name>Tafabo Core</name>
 	<description>Core framework for event-driven bot development</description>
 
-	<url/>
 	<licenses>
-		<license/>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/license/mit</url>
+		</license>
 	</licenses>
+
 	<developers>
-		<developer/>
+		<developer>
+			<name>Reptir</name>
+		</developer>
 	</developers>
+
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<connection>scm:git:https://github.com/Tafabo/tafabo-core.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/Tafabo/tafabo-core.git</developerConnection>
+		<url>https://github.com/Tafabo/tafabo-core</url>
+		<tag>HEAD</tag>
 	</scm>
 
 	<properties>
