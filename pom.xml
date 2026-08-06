@@ -5,7 +5,7 @@
 
 	<groupId>dev.Reptir</groupId>
 	<artifactId>tafabo-core</artifactId>
-	<version>1.9</version>
+	<version>0.9.1</version>
 	<name>Tafabo Core</name>
 	<description>Core framework for event-driven bot development</description>
 
