@@ -32,8 +32,8 @@ public class MiddlewareManager<U, M> {
     }
 
     private <T> PipelineState run(
-            List<Middleware<MiddlewareArg<T, U, M>, PipelineState>> middlewares,
-            MiddlewareArg<T, U, M> value
+            List<Middleware<T, PipelineState>> middlewares,
+            T value
     ) {
         for (var middleware : middlewares) {
             if (middleware.middleware().apply(value) == PipelineState.STOP)
@@ -61,5 +61,7 @@ public class MiddlewareManager<U, M> {
     public PipelineState runAfterCommandsExecuting(MiddlewareArg<Set<BaseCommand<U, M>>, U, M> arg) {
         return run(middlewareRegistry.getAfterCommandsExecuting(), arg);
     }
-
+    public PipelineState runException(ExceptionMiddlewareArg<U, M> arg) {
+        return run(middlewareRegistry.getException(), arg);
+    }
 }

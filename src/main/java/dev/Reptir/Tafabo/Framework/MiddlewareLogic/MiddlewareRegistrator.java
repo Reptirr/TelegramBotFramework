@@ -8,11 +8,11 @@ import java.util.Set;
 
 public abstract class MiddlewareRegistrator<U, M> {
 
-    protected Middleware<MiddlewareArg<U, U, M>, PipelineState> onBeforeCommandSearching() {
+    protected Middleware<MiddlewareArg<U, U, M>, PipelineState> onBeforeCommandsSearching() {
         return null;
     }
 
-    protected Middleware<MiddlewareArg<Set<Trigger<U>>, U, M>, PipelineState> onAfterCommandSearching() {
+    protected Middleware<MiddlewareArg<Set<Trigger<U>>, U, M>, PipelineState> onAfterCommandsSearching() {
         return null;
     }
 
@@ -32,12 +32,16 @@ public abstract class MiddlewareRegistrator<U, M> {
         return null;
     }
 
+    protected Middleware<ExceptionMiddlewareArg<U, M>, PipelineState> onException() {
+        return null;
+    }
+
     public void init(RegistryMiddleware<U, M> storage) {
-        var beforeCommandSearching = onBeforeCommandSearching();
+        var beforeCommandSearching = onBeforeCommandsSearching();
         if (beforeCommandSearching != null)
             storage.addBeforeCommandsSearching(beforeCommandSearching);
 
-        var afterCommandSearching = onAfterCommandSearching();
+        var afterCommandSearching = onAfterCommandsSearching();
         if (afterCommandSearching != null)
             storage.addAfterCommandsSearching(afterCommandSearching);
 
@@ -56,5 +60,9 @@ public abstract class MiddlewareRegistrator<U, M> {
         var afterCommandsExecuting = onAfterCommandsExecuting();
         if (afterCommandsExecuting != null)
             storage.addAfterCommandsExecuting(afterCommandsExecuting);
+
+        var exception = onException();
+        if (exception != null)
+            storage.addException(exception);
     }
 }

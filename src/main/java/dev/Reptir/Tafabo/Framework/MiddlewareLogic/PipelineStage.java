@@ -1,0 +1,15 @@
+package dev.Reptir.Tafabo.Framework.MiddlewareLogic;
+
+public enum PipelineStage {
+    BEFORE_COMMANDS_SEARCHING,
+    AFTER_COMMANDS_SEARCHING,
+
+
+    BEFORE_COMMANDS_EXECUTING,
+
+    BEFORE_COMMAND_EXECUTE,
+    COMMAND_EXECUTE,
+    AFTER_COMMAND_EXECUTE,
+
+    AFTER_COMMANDS_EXECUTING
+}

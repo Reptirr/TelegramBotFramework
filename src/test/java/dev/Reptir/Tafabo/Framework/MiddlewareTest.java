@@ -2,11 +2,9 @@ package dev.Reptir.Tafabo.Framework;
 
 import dev.Reptir.Tafabo.Framework.AdapterLogic.TafaboAdapter;
 import dev.Reptir.Tafabo.Framework.CommandLogic.BaseCommand;
-import dev.Reptir.Tafabo.Framework.MiddlewareLogic.Middleware;
-import dev.Reptir.Tafabo.Framework.MiddlewareLogic.MiddlewareArg;
-import dev.Reptir.Tafabo.Framework.MiddlewareLogic.MiddlewareRegistrator;
-import dev.Reptir.Tafabo.Framework.MiddlewareLogic.PipelineState;
+import dev.Reptir.Tafabo.Framework.MiddlewareLogic.*;
 import dev.Reptir.Tafabo.Framework.TriggerLogic.Trigger;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -47,6 +45,13 @@ public class MiddlewareTest {
         }
     }
 
+    private MyAdapter adapter;
+
+    @BeforeEach
+    void setup() {
+        adapter = new MyAdapter(new Messenger());
+    }
+
     @Test
     void MiddlewareRunningTest() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(6);
@@ -59,7 +64,7 @@ public class MiddlewareTest {
 
         MiddlewareRegistrator<Object, Object> testMiddleware = new MiddlewareRegistrator<>() {
             @Override
-            protected Middleware<MiddlewareArg<Object, Object, Object>, PipelineState> onBeforeCommandSearching() {
+            protected Middleware<MiddlewareArg<Object, Object, Object>, PipelineState> onBeforeCommandsSearching() {
                 return new Middleware<>(
                         0,
                         arg -> {
@@ -71,7 +76,7 @@ public class MiddlewareTest {
             }
 
             @Override
-            protected Middleware<MiddlewareArg<Set<Trigger<Object>>, Object, Object>, PipelineState> onAfterCommandSearching() {
+            protected Middleware<MiddlewareArg<Set<Trigger<Object>>, Object, Object>, PipelineState> onAfterCommandsSearching() {
                 return new Middleware<>(
                         0,
                         arg -> {
@@ -178,7 +183,7 @@ public class MiddlewareTest {
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<>() {
             @Override
-            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandSearching() {
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
                 return new Middleware<>(
                     0,
                     arg -> {
@@ -206,7 +211,7 @@ public class MiddlewareTest {
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
-            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandSearching() {
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
                 return new Middleware<>(
                         0,
                         arg -> {
@@ -234,7 +239,7 @@ public class MiddlewareTest {
 
         MiddlewareRegistrator<Update, Messenger> firstMiddleware = new MiddlewareRegistrator<>() {
             @Override
-            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandSearching() {
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
                 return new Middleware<>(
                         0,
                         arg -> {
@@ -247,7 +252,7 @@ public class MiddlewareTest {
 
         MiddlewareRegistrator<Update, Messenger> secondMiddleware = new MiddlewareRegistrator<>() {
             @Override
-            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandSearching() {
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
                 return new Middleware<>(
                         10,
                         arg -> {
@@ -280,7 +285,7 @@ public class MiddlewareTest {
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
-            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandSearching() {
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
                 return new Middleware<>(
                         0,
                         arg -> PipelineState.STOP
@@ -288,7 +293,7 @@ public class MiddlewareTest {
             }
 
             @Override
-            protected Middleware<MiddlewareArg<Set<Trigger<Update>>, Update, Messenger>, PipelineState> onAfterCommandSearching() {
+            protected Middleware<MiddlewareArg<Set<Trigger<Update>>, Update, Messenger>, PipelineState> onAfterCommandsSearching() {
                 return new Middleware<>(
                         0,
                         arg -> {
@@ -318,7 +323,7 @@ public class MiddlewareTest {
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
-            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandSearching() {
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
                 return new Middleware<>(
                         0,
                         args -> {
@@ -344,7 +349,7 @@ public class MiddlewareTest {
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
-            protected Middleware<MiddlewareArg<Set<Trigger<Update>>, Update, Messenger>, PipelineState> onAfterCommandSearching() {
+            protected Middleware<MiddlewareArg<Set<Trigger<Update>>, Update, Messenger>, PipelineState> onAfterCommandsSearching() {
                 return new Middleware<>(
                         0,
                         args -> {
@@ -523,4 +528,144 @@ public class MiddlewareTest {
 
     }
 
+    // === Multiple middlewares interaction ===
+
+    @Test
+    void MultipleMiddlewares_ExecuteInPriorityOrder() throws InterruptedException {
+        Queue<Integer> executionOrder = new ConcurrentLinkedQueue<>();
+        CountDownLatch latch = new CountDownLatch(3);
+
+        MiddlewareRegistrator<Update, Messenger> lowPriority = new MiddlewareRegistrator<>() {
+            @Override
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
+                return new Middleware<>(100, args -> {
+                    executionOrder.add(3);
+                    latch.countDown();
+                    return PipelineState.CONTINUE;
+                });
+            }
+        };
+
+        MiddlewareRegistrator<Update, Messenger> mediumPriority = new MiddlewareRegistrator<>() {
+            @Override
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
+                return new Middleware<>(50, args -> {
+                    executionOrder.add(2);
+                    latch.countDown();
+                    return PipelineState.CONTINUE;
+                });
+            }
+        };
+
+        MiddlewareRegistrator<Update, Messenger> highPriority = new MiddlewareRegistrator<>() {
+            @Override
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
+                return new Middleware<>(0, args -> {
+                    executionOrder.add(1);
+                    latch.countDown();
+                    return PipelineState.CONTINUE;
+                });
+            }
+        };
+
+        adapter.addMiddleware(lowPriority);
+        adapter.addMiddleware(mediumPriority);
+        adapter.addMiddleware(highPriority);
+
+        adapter.start();
+        adapter.send(new Update("test"));
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
+        assertEquals(Integer.valueOf(1), executionOrder.poll());
+        assertEquals(Integer.valueOf(2), executionOrder.poll());
+        assertEquals(Integer.valueOf(3), executionOrder.poll());
+    }
+
+    @Test
+    void Middleware_CanModifyPipelineData() throws InterruptedException {
+        AtomicReference<String> capturedValue = new AtomicReference<>();
+        CountDownLatch latch = new CountDownLatch(1);
+
+        MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<>() {
+            @Override
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
+                return new Middleware<>(0, args -> {
+                    // Middleware can see the update before commands are searched
+                    capturedValue.set(args.arg().value());
+                    latch.countDown();
+                    return PipelineState.STOP;
+                });
+            }
+        };
+
+        adapter.addMiddleware(middleware);
+        adapter.start();
+        adapter.send(new Update("modified_test"));
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
+        assertEquals("modified_test", capturedValue.get());
+    }
+
+    @Test
+    void Middleware_StopImmediately_PreventsCommandExecution() throws InterruptedException {
+        CountDownLatch commandLatch = new CountDownLatch(1);
+        AtomicBoolean commandExecuted = new AtomicBoolean(false);
+
+        MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<>() {
+            @Override
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
+                return new Middleware<>(0, args -> PipelineState.STOP);
+            }
+        };
+
+        adapter.addMiddleware(middleware);
+        adapter.addCommand(update -> true, ctx -> {
+            commandExecuted.set(true);
+            commandLatch.countDown();
+        });
+
+        adapter.start();
+        adapter.send(new Update("test"));
+
+        // Command should not execute due to STOP
+        assertFalse(commandLatch.await(200, TimeUnit.MILLISECONDS));
+        assertFalse(commandExecuted.get());
+    }
+
+    @Test
+    void MultipleStopsInPipeline_OnlyFirstStops() throws InterruptedException {
+        Queue<Integer> executionOrder = new ConcurrentLinkedQueue<>();
+        CountDownLatch latch = new CountDownLatch(1);
+
+        MiddlewareRegistrator<Update, Messenger> firstMiddleware = new MiddlewareRegistrator<>() {
+            @Override
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
+                return new Middleware<>(0, args -> {
+                    executionOrder.add(1);
+                    latch.countDown();
+                    return PipelineState.STOP;
+                });
+            }
+        };
+
+        MiddlewareRegistrator<Update, Messenger> secondMiddleware = new MiddlewareRegistrator<>() {
+            @Override
+            protected Middleware<MiddlewareArg<Update, Update, Messenger>, PipelineState> onBeforeCommandsSearching() {
+                return new Middleware<>(10, args -> {
+                    executionOrder.add(2);
+                    return PipelineState.STOP;
+                });
+            }
+        };
+
+        adapter.addMiddleware(secondMiddleware);
+        adapter.addMiddleware(firstMiddleware);
+
+        adapter.start();
+        adapter.send(new Update("test"));
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
+        assertEquals(Integer.valueOf(1), executionOrder.poll());
+        assertNull(executionOrder.poll()); // Second middleware should not execute
+    }
 }
