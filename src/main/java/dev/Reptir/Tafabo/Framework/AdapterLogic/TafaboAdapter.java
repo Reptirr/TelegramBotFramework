@@ -1,8 +1,8 @@
 package dev.Reptir.Tafabo.Framework.AdapterLogic;
 
 import dev.Reptir.Tafabo.Framework.CommandLogic.BaseCommand;
-import dev.Reptir.Tafabo.Framework.CommandLogic.CommandExecutor;
 import dev.Reptir.Tafabo.Framework.Handlers.TafaboApplication;
+import dev.Reptir.Tafabo.Framework.MiddlewareLogic.MiddlewareRegistrator;
 import dev.Reptir.Tafabo.Framework.Registries.RegistryCommand;
 import dev.Reptir.Tafabo.Framework.Registries.RegistryThread;
 import dev.Reptir.Tafabo.Framework.ThreadLogic.ThreadId;
@@ -25,6 +25,7 @@ public abstract class TafaboAdapter<U, M> {
 
     public TafaboAdapter(M messenger) {
         this.messenger = messenger;
+        this.tafaboApplication = new TafaboApplication<>(registryCommand, messenger, registryThread);
     }
 
     protected abstract void onStart();
@@ -38,16 +39,6 @@ public abstract class TafaboAdapter<U, M> {
         if (isStarted) {
             return;
         }
-
-        CommandExecutor<U, M> executor = new CommandExecutor<>(registryThread);
-
-        tafaboApplication =
-                new TafaboApplication<>(
-                        registryCommand,
-                        messenger,
-                        executor,
-                        registryThread
-                );
 
         try {
             onStart();
@@ -82,6 +73,10 @@ public abstract class TafaboAdapter<U, M> {
 
     public void addCommand(Trigger<U> trigger, BaseCommand<U, M> command) {
         registryCommand.register(trigger, command);
+    }
+
+    public void addMiddleware(MiddlewareRegistrator<U, M> middlewareRegistrator) {
+        tafaboApplication.addMiddleware(middlewareRegistrator);
     }
 
 }

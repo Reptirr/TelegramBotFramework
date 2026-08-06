@@ -25,7 +25,7 @@ class CommandRouterTest {
         registry.register(update -> update.value().equals("no"), nonMatching);
 
         Set<BaseCommand<Update, Messenger>> result =
-                new CommandRouter<>(registry).getMatched(new Update("ok"));
+                new CommandRouter<>(registry).getMatched(new Update("ok")).component2();
 
         assertEquals(1, result.size());
         assertTrue(result.contains(matching));
@@ -42,7 +42,7 @@ class CommandRouterTest {
         registry.register(update -> true, second);
 
         Set<BaseCommand<Update, Messenger>> result =
-                new CommandRouter<>(registry).getMatched(new Update("value"));
+                new CommandRouter<>(registry).getMatched(new Update("value")).component2();
 
         assertEquals(2, result.size());
         assertTrue(result.containsAll(Set.of(first, second)));
@@ -54,7 +54,7 @@ class CommandRouterTest {
         registry.register(update -> false, ctx -> {});
 
         assertTrue(new CommandRouter<>(registry)
-                .getMatched(new Update("value"))
+                .getMatched(new Update("value")).component1()
                 .isEmpty());
     }
 
