@@ -60,7 +60,7 @@ It is **platform-independent** and communicates through adapters that connect an
 <dependency>
     <groupId>com.github.Tafabo</groupId>
     <artifactId>tafabo-core</artifactId>
-    <version>v1.9</version>
+    <version>v1.0</version>
 </dependency>
 ```
 
