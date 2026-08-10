@@ -28,4 +28,9 @@ public class RegistryCommand<U, M> {
         return commands.entrySet();
     }
 
+    public void setMap(Map<Trigger<U>, BaseCommand<U, M>> commandMap) {
+        commands.clear();
+        commands.putAll(commandMap);
+    }
+
 }
