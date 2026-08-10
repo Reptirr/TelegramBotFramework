@@ -8,28 +8,6 @@ It is **platform-independent** and communicates through adapters that connect an
 
 ---
 
-## Features
-
-* Event-driven architecture
-* Platform-agnostic design
-* Trigger-based command routing
-* Virtual-thread execution (Java 22+)
-* Adapter-based extensibility
-* Minimal and lightweight core
-
----
-
-## Core Concepts
-
-* **Update** — incoming event from a messaging platform
-* **Messenger** — abstraction for sending messages
-* **Command** — unit of business logic
-* **Trigger** — condition that determines command execution
-* **Context** — runtime data passed to commands
-* **Adapter** — bridge between a platform and Tafabo Core
-
----
-
 ## How it works
 
 1. A platform receives an update
