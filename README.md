@@ -38,7 +38,7 @@ It is **platform-independent** and communicates through adapters that connect an
 <dependency>
     <groupId>com.github.Tafabo</groupId>
     <artifactId>tafabo-core</artifactId>
-    <version>v1.0</version>
+    <version>v1.1</version>
 </dependency>
 ```
 
@@ -46,7 +46,7 @@ It is **platform-independent** and communicates through adapters that connect an
 
 ## Requirements
 
-* Java 22 or higher
+* Java 21 or higher
 * Maven
 
 ---

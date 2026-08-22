@@ -5,7 +5,7 @@
 
 	<groupId>dev.Reptir</groupId>
 	<artifactId>tafabo-core</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<name>Tafabo Core</name>
 	<description>Core framework for event-driven bot development</description>
 
@@ -31,7 +31,7 @@
 	</scm>
 
 	<properties>
-		<maven.compiler.release>22</maven.compiler.release>
+		<maven.compiler.release>21</maven.compiler.release>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -78,7 +78,7 @@
 				<version>3.13.0</version>
 
 				<configuration>
-					<release>22</release>
+					<release>21</release>
 
 					<annotationProcessorPaths>
 						<path>
