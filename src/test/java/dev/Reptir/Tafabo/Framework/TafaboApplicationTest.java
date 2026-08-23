@@ -1,8 +1,6 @@
 package dev.Reptir.Tafabo.Framework;
 
 import dev.Reptir.Tafabo.Framework.Handlers.TafaboApplication;
-import dev.Reptir.Tafabo.Framework.Registries.RegistryCommand;
-import dev.Reptir.Tafabo.Framework.Registries.RegistryThread;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -18,14 +16,14 @@ class TafaboApplicationTest {
 
     @Test
     void consumeUpdateExecutesMatchingCommand() throws Exception {
-        RegistryCommand<Update, Messenger> commands = new RegistryCommand<>();
-        RegistryThread threads = new RegistryThread();
-
+        TafaboApplication<Update, Messenger> app = new TafaboApplication<>(new Messenger());
         try {
             CountDownLatch latch = new CountDownLatch(1);
             AtomicReference<Update> received = new AtomicReference<>();
 
-            commands.register(
+
+
+            app.addCommand(
                     update -> update.value().equals("hello"),
                     ctx -> {
                         received.set(ctx.update());
@@ -33,62 +31,47 @@ class TafaboApplicationTest {
                     }
             );
 
-            TafaboApplication<Update, Messenger> app =
-                    new TafaboApplication<>(
-                            commands,
-                            new Messenger(),
-                            threads
-                    );
-
             Update update = new Update("hello");
             app.consumeUpdate(update);
 
             assertTrue(latch.await(2, TimeUnit.SECONDS));
             assertSame(update, received.get());
         } finally {
-            threads.shutdown();
+            app.cancelAllThreads();
         }
     }
 
     @Test
     void consumeUpdateDoesNotExecuteNonMatchingCommand() throws Exception {
-        RegistryCommand<Update, Messenger> commands = new RegistryCommand<>();
-        RegistryThread threads = new RegistryThread();
+        TafaboApplication<Update, Messenger> app = new TafaboApplication<>(new Messenger());
 
         try {
             CountDownLatch latch = new CountDownLatch(1);
 
-            commands.register(
+            app.addCommand(
                     update -> false,
                     ctx -> latch.countDown()
             );
 
-            TafaboApplication<Update, Messenger> app =
-                    new TafaboApplication<>(
-                            commands,
-                            new Messenger(),
-                            threads
-                    );
 
             app.consumeUpdate(new Update("hello"));
 
             assertFalse(latch.await(250, TimeUnit.MILLISECONDS));
         } finally {
-            threads.shutdown();
+            app.cancelAllThreads();
         }
     }
 
     @Test
     void contextContainsUpdateAndMessenger() throws Exception {
-        RegistryCommand<Update, Messenger> commands = new RegistryCommand<>();
-        RegistryThread threads = new RegistryThread();
         Messenger messenger = new Messenger();
+        TafaboApplication<Update, Messenger> app = new TafaboApplication<>(messenger);
 
         try {
             CountDownLatch latch = new CountDownLatch(1);
             AtomicReference<Object> receivedMessenger = new AtomicReference<>();
 
-            commands.register(
+            app.addCommand(
                     update -> true,
                     ctx -> {
                         receivedMessenger.set(ctx.messenger());
@@ -96,19 +79,50 @@ class TafaboApplicationTest {
                     }
             );
 
-            TafaboApplication<Update, Messenger> app =
-                    new TafaboApplication<>(
-                            commands,
-                            messenger,
-                            threads
-                    );
 
             app.consumeUpdate(new Update("hello"));
 
             assertTrue(latch.await(2, TimeUnit.SECONDS));
             assertSame(messenger, receivedMessenger.get());
         } finally {
-            threads.shutdown();
+            app.cancelAllThreads();
+        }
+    }
+
+    @Test
+    void cancelAllMakeInterrupt() {
+        TafaboApplication<Update, Messenger> app = new TafaboApplication<>(new Messenger());
+
+        CountDownLatch interrupted = new CountDownLatch(3);
+
+        try {
+            app.addCommand(
+                    e -> true,
+                    ctx -> {
+                        try {
+                            while (true) {
+                                Thread.sleep(10);
+                            }
+                        } catch (InterruptedException e) {
+                            interrupted.countDown();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+            );
+
+            for (int i = 0; i < 3; i++) { // create 3 threads
+                app.consumeUpdate(new Update("123"));
+            }
+
+            Thread.sleep(100);
+
+            app.cancelAllThreads();
+            System.out.println("cancelled");
+
+            assertTrue(interrupted.await(100, TimeUnit.MILLISECONDS));
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -178,8 +178,10 @@ public class MiddlewareTest {
     }
 
     @Test
-    void MiddlewareRegisterBeforeStart() {
+    void MiddlewareRegisterBeforeStart() throws InterruptedException {
         AtomicBoolean work = new AtomicBoolean();
+        CountDownLatch latch = new CountDownLatch(1);
+
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<>() {
             @Override
@@ -188,6 +190,7 @@ public class MiddlewareTest {
                     0,
                     arg -> {
                         work.set(true);
+                        latch.countDown();
                         return PipelineState.CONTINUE;
                     }
                 );
@@ -202,12 +205,14 @@ public class MiddlewareTest {
 
         adapter.send(new Update(""));
 
+        assertTrue(latch.await(10, TimeUnit.MILLISECONDS));
+
         assertTrue(work.get());
     }
 
     @Test
-    void MiddlewareRegisterAfterStart() {
-        AtomicBoolean work = new AtomicBoolean();
+    void MiddlewareRegisterAfterStart() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
@@ -215,7 +220,7 @@ public class MiddlewareTest {
                 return new Middleware<>(
                         0,
                         arg -> {
-                            work.set(true);
+                            latch.countDown();
                             return PipelineState.STOP;
                         }
                 );
@@ -230,7 +235,7 @@ public class MiddlewareTest {
 
         adapter.send(new Update(""));
 
-        assertTrue(work.get());
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
     }
 
     @Test
@@ -318,8 +323,9 @@ public class MiddlewareTest {
     // arguments
 
     @Test
-    void MiddlewareBeforeCommandsSearchingArguments() {
+    void MiddlewareBeforeCommandsSearchingArguments() throws InterruptedException {
         AtomicReference<String> arg = new AtomicReference<>("");
+        CountDownLatch latch = new CountDownLatch(1);
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
@@ -328,6 +334,7 @@ public class MiddlewareTest {
                         0,
                         args -> {
                                  arg.set(args.arg().value());
+                                 latch.countDown();
                                  return PipelineState.STOP;
                         }
                 );
@@ -340,12 +347,14 @@ public class MiddlewareTest {
 
         adapter.send(new Update("test_string"));
 
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
         assertEquals("test_string", arg.get());
     }
 
     @Test
-    void MiddlewareAfterCommandsSearchingArguments() {
+    void MiddlewareAfterCommandsSearchingArguments() throws InterruptedException {
         AtomicReference<Set<Trigger<Update>>> triggersFromMiddleware = new AtomicReference<>(new HashSet<>());
+        CountDownLatch latch = new CountDownLatch(1);
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
@@ -354,6 +363,7 @@ public class MiddlewareTest {
                         0,
                         args -> {
                             triggersFromMiddleware.set(args.arg());
+                            latch.countDown();
                             return PipelineState.STOP;
                         }
                 );
@@ -379,12 +389,14 @@ public class MiddlewareTest {
 
         adapter.send(new Update(""));
 
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
         assertEquals(registeredTriggers, triggersFromMiddleware.get());
     }
 
     @Test
-    void MiddlewareBeforeCommandsExecutingArguments() {
+    void MiddlewareBeforeCommandsExecutingArguments() throws InterruptedException {
         AtomicReference<Set<BaseCommand<Update, Messenger>>> commandsFromMiddleware = new AtomicReference<>();
+        CountDownLatch latch = new CountDownLatch(1);
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
@@ -393,6 +405,7 @@ public class MiddlewareTest {
                         0,
                         args -> {
                             commandsFromMiddleware.set(args.arg());
+                            latch.countDown();
                             return PipelineState.STOP;
                         }
                 );
@@ -418,6 +431,7 @@ public class MiddlewareTest {
 
         adapter.send(new Update(""));
 
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
         assertEquals(registeredCommands, commandsFromMiddleware.get());
 
     }
@@ -489,8 +503,9 @@ public class MiddlewareTest {
     }
 
     @Test
-    void MiddlewareAfterCommandsExecutingArguments() {
+    void MiddlewareAfterCommandsExecutingArguments() throws InterruptedException {
         AtomicReference<Set<BaseCommand<Update, Messenger>>> commandsFromMiddleware = new AtomicReference<>();
+        CountDownLatch latch = new CountDownLatch(1);
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<Update, Messenger>() {
             @Override
@@ -499,6 +514,7 @@ public class MiddlewareTest {
                         0,
                         args -> {
                             commandsFromMiddleware.set(args.arg());
+                            latch.countDown();
                             return PipelineState.STOP;
                         }
                 );
@@ -524,6 +540,7 @@ public class MiddlewareTest {
 
         adapter.send(new Update(""));
 
+        assertTrue(latch.await(2, TimeUnit.SECONDS));
         assertEquals(registeredCommands, commandsFromMiddleware.get());
 
     }

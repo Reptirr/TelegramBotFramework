@@ -17,15 +17,13 @@ public abstract class TafaboAdapter<U, M> {
     private final Logger logger = LoggerFactory.getLogger(TafaboAdapter.class);
     private boolean isStarted = false;
 
-    private final RegistryCommand<U, M> registryCommand = new RegistryCommand<>();
-    private final RegistryThread registryThread = new RegistryThread();
     private TafaboApplication<U, M> tafaboApplication;
 
     private final M messenger;
 
     public TafaboAdapter(M messenger) {
         this.messenger = messenger;
-        this.tafaboApplication = new TafaboApplication<>(registryCommand, messenger, registryThread);
+        this.tafaboApplication = new TafaboApplication<>(messenger);
     }
 
     protected abstract void onStart();
@@ -59,7 +57,7 @@ public abstract class TafaboAdapter<U, M> {
             logger.error("Failed to stop bot due to onStop", e);
         } finally {
             isStarted = false;
-            registryThread.shutdown();
+
         }
     }
 
@@ -67,15 +65,11 @@ public abstract class TafaboAdapter<U, M> {
         return isStarted;
     }
 
-    public Map<ThreadId, Future<?>> getThreads() {
-        return registryThread.getThreads();
-    }
-
     public void addCommand(Trigger<U> trigger, BaseCommand<U, M> command) {
-        registryCommand.register(trigger, command);
+        tafaboApplication.addCommand(trigger, command);
     }
     public void setCommands(Map<Trigger<U>, BaseCommand<U, M>> commands) {
-        registryCommand.setMap(commands);
+        tafaboApplication.setCommands(commands);
     }
 
     public void addMiddleware(MiddlewareRegistrator<U, M> middlewareRegistrator) {

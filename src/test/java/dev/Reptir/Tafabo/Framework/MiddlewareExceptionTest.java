@@ -280,7 +280,7 @@ public class MiddlewareExceptionTest {
     @Test
     void ExceptionMiddlewareContinue_DoesNotStopPipeline() throws InterruptedException {
         CountDownLatch afterCommandsExecutingLatch = new CountDownLatch(1);
-        AtomicBoolean exceptionHandled = new AtomicBoolean(false);
+        CountDownLatch exceptionLatch = new CountDownLatch(1);
 
         MiddlewareRegistrator<Update, Messenger> middleware = new MiddlewareRegistrator<>() {
             @Override
@@ -293,7 +293,7 @@ public class MiddlewareExceptionTest {
             @Override
             protected Middleware<ExceptionMiddlewareArg<Update, Messenger>, PipelineState> onException() {
                 return new Middleware<>(0, args -> {
-                    exceptionHandled.set(true);
+                    exceptionLatch.countDown();
                     return PipelineState.CONTINUE;
                 });
             }
@@ -312,7 +312,7 @@ public class MiddlewareExceptionTest {
         adapter.start();
         adapter.send(new Update("test"));
 
-        assertTrue(exceptionHandled.get());
+        assertTrue(exceptionLatch.await(2, TimeUnit.SECONDS));
         // After CONTINUE, pipeline should continue and reach afterCommandsExecuting
         assertTrue(afterCommandsExecutingLatch.await(2, TimeUnit.SECONDS));
     }
