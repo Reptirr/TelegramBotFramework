@@ -74,6 +74,9 @@ public abstract class TafaboAdapter<U, M> {
     public void addCommand(Trigger<U> trigger, BaseCommand<U, M> command) {
         registryCommand.register(trigger, command);
     }
+    public void setCommands(Map<Trigger<U>, BaseCommand<U, M>> commands) {
+        registryCommand.setMap(commands);
+    }
 
     public void addMiddleware(MiddlewareRegistrator<U, M> middlewareRegistrator) {
         tafaboApplication.addMiddleware(middlewareRegistrator);
