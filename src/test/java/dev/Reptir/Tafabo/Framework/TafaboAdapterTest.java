@@ -251,9 +251,13 @@ class TafaboAdapterTest {
     void startStopCanBeRepeated() {
         TestAdapter adapter = new TestAdapter();
 
+        adapter.addCommand(e -> true, ctx -> {});
+
         for (int i = 0; i < 3; i++) {
             adapter.start();
             assertTrue(adapter.running());
+
+            adapter.send(new Update("123"));
 
             adapter.stop();
             assertFalse(adapter.running());

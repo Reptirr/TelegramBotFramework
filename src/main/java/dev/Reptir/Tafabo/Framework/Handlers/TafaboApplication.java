@@ -11,26 +11,46 @@ import kotlin.Pair;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class TafaboApplication<U, M> {
-    private final RegistryThread threadRegistry;
-    private final CommandRouter<U, M> router;
+    private final RegistryThread threadRegistry = new RegistryThread();
     private final MiddlewareManager<U, M> middlewareManager = new MiddlewareManager<>();
+
+    private final RegistryCommand<U, M> commandRegistry = new RegistryCommand<>();
+    private final CommandRouter<U, M> router = new CommandRouter<>(commandRegistry);
 
     M messenger;
 
-    public TafaboApplication(RegistryCommand<U, M> commandRegistry, M messenger, RegistryThread registryThread) {
-        this.router = new CommandRouter<>(commandRegistry);
+    public TafaboApplication(M messenger) {
         this.messenger = messenger;
-        this.threadRegistry = registryThread;
     }
 
-    @SneakyThrows
+    // cancel all threads. does not execute the remaining middlewares
+    public void cancelAllThreads() {
+        threadRegistry.cancelAllThreads();
+    }
+
+    public void addCommand(Trigger<U> trigger, BaseCommand<U, M> command) {
+        commandRegistry.register(trigger, command);
+    }
+    public void setCommands(Map<Trigger<U>, BaseCommand<U, M>> commands) {
+        commandRegistry.setMap(commands);
+    }
+
+    public void addMiddleware(MiddlewareRegistrator<U, M> middlewareRegistrator) {
+        middlewareManager.registerMiddleware(middlewareRegistrator);
+    }
+
+
+    // handling update is sync.
     public void consumeUpdate(U update) {
+        threadRegistry.createThread(() -> {
+
         Context<U, M> ctx = new Context<>(update, messenger);
         try {
             if (middlewareManager.runBeforeCommandsSearching(new MiddlewareArg<>(update, ctx)) == PipelineState.STOP)
@@ -106,6 +126,7 @@ public class TafaboApplication<U, M> {
                 latch.countDown();
             });
         }
+
         try {
             latch.await();
         } catch (InterruptedException e) {
@@ -114,6 +135,7 @@ public class TafaboApplication<U, M> {
             return;
         }
 
+
         if (stopped.get()) return;
 
         try {
@@ -121,9 +143,7 @@ public class TafaboApplication<U, M> {
         } catch (Exception e) {
             middlewareManager.runException(new ExceptionMiddlewareArg<>(e, PipelineStage.AFTER_COMMANDS_EXECUTING, ctx));
         }
-    }
 
-    public void addMiddleware(MiddlewareRegistrator<U, M> middlewareRegistrator) {
-        middlewareManager.registerMiddleware(middlewareRegistrator);
+        });
     }
 }
